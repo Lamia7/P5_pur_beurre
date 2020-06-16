@@ -11,8 +11,9 @@ Their idea is to create a program that would interact with the Open Food Facts d
 
 #### Cheklist :memo:
 - [x] Find the info we will need for the database
-
 - [x] Create the tables
-
 - [x] Create the foreign keys
-
+- [x] Choose which data to get from OFF API
+- [x] Get data from OFF API
+- [ ] Clean data from API
+- [ ] Add data to database

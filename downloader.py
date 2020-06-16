@@ -7,9 +7,6 @@ from product import Product
 class Downloader:
     """Class that downloads the chosen data from OFF api"""
 
-    def __init__(self):
-        self.display_products()
-
     def get_popular_products(self):
         """Gets the thousand most popular products from OFF API"""
 
@@ -42,10 +39,10 @@ class Downloader:
         my_products = []
 
         for one_product in products:
-            my_product = Product(one_product.get('product_name_fr'),
+            my_product = Product(one_product.get('product_name_fr'),  # default: none
                                  one_product.get('categories'),
                                  one_product.get('brands'),
-                                 one_product.get('code'),  # default: none
+                                 one_product.get('code'),
                                  one_product.get('stores', "NOT FOUND"),
                                  one_product.get('url'),
                                  one_product.get('nutriscore_grade')
@@ -55,11 +52,13 @@ class Downloader:
         return my_products
 
     def display_products(self):
-        """Displays each product's details"""
+        """Displays each product's details
+        chaine = str(product)"""
         my_products = self.get_products_details()
         print(len(my_products))  # number of downloaded products
         for one_product in my_products:
-            one_product.print_content()
+            print(str(one_product))
 
 
 download = Downloader()
+download.display_products()

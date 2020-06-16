@@ -1,7 +1,15 @@
 class Product:
     """Class that creates products"""
 
-    def __init__(self, name, category, brand, barcode, stores, url, nutriscore_grade):
+    def __init__(self,
+                 name,
+                 category,
+                 brand,
+                 barcode,
+                 stores,
+                 url,
+                 nutriscore_grade
+                 ):
         """description d'un produit: il a un nom, des catégories, marque, magasins, code, ingrédients, url, nutriscore"""
         self.name = name
         self.category = category
@@ -11,13 +19,11 @@ class Product:
         self.url = url
         self.nutriscore_grade = nutriscore_grade
 
-    def print_content(self):
-        print('-------------------------------')
-        print('NAME: ', self.name)
-        print('CATEGORY: ', self.category)
-        print('BRAND: ', self.brand)
-        print('BARCODE: ', self.barcode)
-        print('STORES: ', self.stores)
-        print('URL: ', self.url)
-        print('NUTRISCORE GRADE: ', self.nutriscore_grade)
-        print('-------------------------------')
+    def __str__(self):
+        """String representation of Product object"""
+        return f"----------------" \
+               f"NAME: {self.name}, | BRAND: {self.brand}, | BARCODE: {self.barcode}" \
+               f"| CATEGORY: {self.category}" \
+               f"| STORES: {self.stores}" \
+               f"| URL: {self.url}" \
+               f"| NUTRISCORE: {self.nutriscore_grade}"

@@ -1,7 +1,7 @@
 import requests
 import time
 import config
-from product import Product
+from models.product import Product
 
 
 class Downloader:

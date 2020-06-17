@@ -1,5 +1,11 @@
 """Configuration file for optimization of other files"""
 
+# DATABASE/USER CONFIGURATION
+USER = 'root'
+PASSWORD = 'password'
+HOST = 'localhost'
+DATABASE_NAME = 'food_substitute'
+
 # PRODUCTS : Search criteria for API
 HEADERS = {"User-Agent": "P5_substitute - GNU/Linux - Version 0.1"}
 PAYLOAD = {"search_simple": 1,

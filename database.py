@@ -21,4 +21,4 @@ class Database:
             print("Connection successful.")
             cnx.close()
         except mc.Error as err:
-            print("Connection unsuccessful : {}".format(err))
+            print(f"Connection unsuccessful : {err}")

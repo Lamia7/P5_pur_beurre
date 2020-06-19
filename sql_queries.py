@@ -1,18 +1,18 @@
 """SQL queries used in other files"""
 
-# ---- GENERAL DATABASE CREATION QUERIES ---- #
+# -------- GENERAL DATABASE CREATION QUERIES -------- #
 
-CREATE_SCHEMA = "CREATE SCHEMA IF NOT EXISTS `food_substitute` DEFAULT CHARACTER SET utf8mb4 ;"
-USE_DATABASE = "USE `food_substitute` ;"
+CREATE_SCHEMA = "CREATE SCHEMA IF NOT EXISTS `food_substitute` DEFAULT CHARACTER SET utf8mb4;"
+USE_DATABASE = "USE `food_substitute`;"
 
-SHOW_TABLES = "SHOW TABLES ;"
+SHOW_TABLES = "SHOW TABLES;"
 
 
-# ---- CREATION QUERIES ---- #
+# -------- CREATION QUERIES -------- #
 
 CREATE_PRODUCT_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`product` (" \
                        "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
-                       "`name` VARCHAR(150) COLLATE 'Default Collation' NOT NULL," \
+                       "`name` VARCHAR(150) NOT NULL," \
                        "`nutriscore` CHAR(1) NOT NULL," \
                        "`barcode` BIGINT UNSIGNED NOT NULL," \
                        "`brand` VARCHAR(100) NULL," \
@@ -35,7 +35,7 @@ CREATE_STORE_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`store` (" \
                      "DEFAULT CHARACTER SET = utf8mb4;"
 
 CREATE_FAVORITE_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`favorite` (" \
-                        "`id` INT UNSIGNED NULL AUTO_INCREMENT," \
+                        "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                         "`name` VARCHAR(150) NULL," \
                         "`nutriscore` CHAR(1) NULL," \
                         "`barcode` BIGINT UNSIGNED NULL," \
@@ -45,16 +45,20 @@ CREATE_FAVORITE_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`favorite`
                         "DEFAULT CHARACTER SET = utf8mb4;"
 
 
-# ---- INSERTION QUERIES ---- #
+# -------- INSERTION QUERIES -------- #
+
+INSERT_PRODUCTS = "INSERT IGNORE INTO PRODUCT (name, nutriscore, barcode, url) " \
+                  "VALUES (%s, %s, %s, %s);"
+
+INSERT_CATEGORIES = "INSERT IGNORE INTO CATEGORIES (name) VALUES (%s);"
+
+INSERT_STORES = "INSERT IGNORE INTO STORES (name) VALUES (%s);"
 """---------------
-INSERT_PRODUCTS
-INSERT_CATEGORIES
-INSERT_STORES
 INSERT
 INSERT
 """
 
-# SELECTION QUERIES
+# -------- SELECTION QUERIES -------- #
 """---------------
 SELECT_PRODUCT
 SELECT_CATEGORY

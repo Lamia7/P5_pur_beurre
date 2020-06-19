@@ -7,7 +7,9 @@ from models.product import Product
 class Downloader:
     """Class that downloads the chosen data from OFF api"""
 
-    def get_popular_products(self):
+    products = []
+
+    def __init__(self):
         """Gets the thousand most popular products from OFF API"""
 
         # Manage time between requests
@@ -32,33 +34,66 @@ class Downloader:
         # Assign the products found in a json format into a variable (dictionary)
         products_json = r.json()
         products = products_json["products"]
-        return products  # list of dictionaries
+        self.products = products  # list of dictionaries
 
-    def get_products_details(self):
-        products = self.get_popular_products()
-        my_products = []
+    def avoid_empty(self):
+        """Gets only products without empty values."""
 
-        for one_product in products:
-            my_product = Product(one_product.get('product_name_fr'),  # default: none
-                                 one_product.get('categories'),
-                                 one_product.get('brands'),
-                                 one_product.get('code'),
-                                 one_product.get('stores', "NOT FOUND"),
-                                 one_product.get('url'),
-                                 one_product.get('nutriscore_grade')
+        products = self.products
+        full_products = []
+        for p in products:
+            if p.get('product_name_fr') \
+                    and p.get('categories')\
+                    and p.get('brands') \
+                    and p.get('code') \
+                    and p.get('stores') \
+                    and p.get('url') \
+                    and p.get('nutriscore_grade') is not None:
+
+                full_products.append(p)
+        self.products = full_products
+        #print(len(full_products))
+
+    def clean(self):
+        """Normalize product's name, categories and stores"""
+
+        clean_products = []
+        products = self.products
+        for product in products:
+            product['product_name_fr'] = set([name.strip().lower().capitalize() for name in product['product_name_fr'].split(',')])
+            product['categories'] = set([name.strip().lower().capitalize() for name in product['categories'].split(',')])
+            product['stores'] = set([store.strip().upper() for store in product['stores'].split(',')])
+            clean_products.append(product)
+
+        return clean_products
+
+    def get_products(self):
+        """Gets product objects"""
+
+        clean_products = self.clean()
+        products = []
+        for one_product in clean_products:
+            my_product = Product(one_product['product_name_fr'],
+                                 one_product['categories'],
+                                 one_product['brands'],
+                                 one_product['code'],
+                                 one_product['stores'],
+                                 one_product['url'],
+                                 one_product['nutriscore_grade']
                                  )
 
-            my_products.append(my_product)
-        return my_products
+            products.append(my_product)
+        return products
 
     def display_products(self):
         """Displays each product's details
         chaine = str(product)"""
-        my_products = self.get_products_details()
-        print(len(my_products))  # number of downloaded products
-        for one_product in my_products:
+        products = self.get_products()
+        print(len(products))  # number of downloaded products
+        for one_product in products:
             print(str(one_product))
 
 
 download = Downloader()
+download.avoid_empty()
 download.display_products()

@@ -1,16 +1,19 @@
 """SQL queries used in other files"""
 
-# -------- GENERAL DATABASE CREATION QUERIES -------- #
+from config import DATABASE_NAME
 
-CREATE_SCHEMA = "CREATE SCHEMA IF NOT EXISTS `food_substitute` DEFAULT CHARACTER SET utf8mb4;"
-USE_DATABASE = "USE `food_substitute`;"
+# -------- GENERAL DATABASE CREATION QUERIES -------- #
+CREATE_SCHEMA = "CREATE SCHEMA IF NOT EXISTS " + DATABASE_NAME + " DEFAULT CHARACTER SET utf8mb4;"
+USE_DATABASE = "USE " + DATABASE_NAME + ";"
 
 SHOW_TABLES = "SHOW TABLES;"
 
 
 # -------- CREATION QUERIES -------- #
 
-CREATE_PRODUCT_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`product` (" \
+TABLES = {}
+
+TABLES['product'] = "CREATE TABLE IF NOT EXISTS `product` (" \
                        "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                        "`name` VARCHAR(150) NOT NULL," \
                        "`nutriscore` CHAR(1) NOT NULL," \
@@ -18,31 +21,28 @@ CREATE_PRODUCT_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`product` (
                        "`brand` VARCHAR(100) NULL," \
                        "`url` TEXT NOT NULL," \
                        "PRIMARY KEY (`id`))" \
-                       "ENGINE = InnoDB" \
-                       "DEFAULT CHARACTER SET = utf8mb4;"
+                       "ENGINE = InnoDB;"
 
-CREATE_CATEGORY_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`category` (" \
+TABLES['category'] = "CREATE TABLE IF NOT EXISTS `category` (" \
                         "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                         "`name` VARCHAR(100) NOT NULL," \
                         "PRIMARY KEY (`id`))" \
                         "DEFAULT CHARACTER SET = utf8mb4;"
 
-CREATE_STORE_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`store` (" \
+TABLES['store'] = "CREATE TABLE IF NOT EXISTS `store` (" \
                      "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                      "`name` VARCHAR(100) NOT NULL," \
                      "PRIMARY KEY (`id`))" \
-                     "ENGINE = InnoDB" \
-                     "DEFAULT CHARACTER SET = utf8mb4;"
+                     "ENGINE = InnoDB;"
 
-CREATE_FAVORITE_TABLE = "CREATE TABLE IF NOT EXISTS `food_substitute`.`favorite` (" \
+TABLES['favorite'] = "CREATE TABLE IF NOT EXISTS `favorite` (" \
                         "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                         "`name` VARCHAR(150) NULL," \
                         "`nutriscore` CHAR(1) NULL," \
                         "`barcode` BIGINT UNSIGNED NULL," \
                         "`url` TEXT NULL," \
                         "PRIMARY KEY (`id`))" \
-                        "ENGINE = InnoDB" \
-                        "DEFAULT CHARACTER SET = utf8mb4;"
+                        "ENGINE = InnoDB;"
 
 
 # -------- INSERTION QUERIES -------- #

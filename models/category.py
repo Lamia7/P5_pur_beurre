@@ -8,4 +8,14 @@ class Category:
         self.name = name
 
     def __str__(self):
+        return f"{self.id}, {self.name}"
+
+
+class CategoryManager:
+    """Manages category data"""
+
+    def insert_category(self):
+        pass
+
+    def display_category(self):
         pass

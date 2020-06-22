@@ -27,3 +27,13 @@ class Product:
                f"| STORES: {self.stores}" \
                f"| URL: {self.url}" \
                f"| NUTRISCORE: {self.nutriscore_grade}"
+
+
+class ProductManager:
+    """Manages products data"""
+
+    def insert_product(self):
+        pass
+
+    def display_product(self):
+        pass

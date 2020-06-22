@@ -4,7 +4,7 @@
 USER = 'root'
 PASSWORD = 'password'
 HOST = 'localhost'
-DATABASE_NAME = 'food_substitute'
+DATABASE_NAME = 'DataFood'
 
 # PRODUCTS : Search criteria for API
 HEADERS = {"User-Agent": "P5_substitute - GNU/Linux - Version 0.1"}

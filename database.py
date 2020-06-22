@@ -1,24 +1,34 @@
 import mysql.connector as mc
 import config as conf
+import sql_queries
+
+
+kwargs = {'user': conf.USER, 'password': conf.PASSWORD, 'host': conf.HOST, 'database': ''}
 
 
 class Database:
 
-    def __init__(self, user=conf.USER,
-                 password=conf.PASSWORD,
-                 host=conf.HOST,
-                 database_name=conf.DATABASE_NAME
-                 ):
-        self.user = user
-        self.password = password
-        self.host = host
-        self.database_name = database_name
+    def __init__(self):
+        self.create_database()
 
-    def connect(self):
-        """Connect to MySQL server"""
+    @staticmethod
+    def create_database():
+        """Create database"""
+
         try:
-            cnx = mc.connect(self.user, self.password, self.host, self.database_name)
-            print("Connection successful.")
+            cnx = mc.connect(**kwargs)
+            cursor = cnx.cursor()  # init cursor
+
+            # Create database
+            cursor.execute(sql_queries.CREATE_SCHEMA)
+            cursor.execute(sql_queries.USE_DATABASE)
+            print("New schema successfully created.")
+            cnx.commit()  # Commit/save changes on db
+
+            cursor.close()
             cnx.close()
         except mc.Error as err:
-            print(f"Connection unsuccessful : {err}")
+            print(f"Unsuccessful creation of a new schema: {err}")
+
+
+db = Database()

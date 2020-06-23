@@ -3,22 +3,24 @@ import config as conf
 import sql_queries
 
 
-kwargs = {'user': conf.USER, 'password': conf.PASSWORD, 'host': conf.HOST, 'database': None}  # None or '' ?
-
-
 class Database:
 
     def __init__(self):
-        self.create_database()
+        self.cnx = None
+        self.cursor = None
+        self.connect()
 
-    @staticmethod
-    def create_database():
+    def connect(self):
+        self.cnx = mc.connect(**conf.MYSQLCONFIG)
+        self.cursor = self.cnx.cursor()  # init cursor
+        return self.cursor, self.cnx
+
+    def create_database(self):
         """Create database"""
 
+        cnx = self.cnx
+        cursor = self.cursor
         try:
-            cnx = mc.connect(**kwargs)
-            cursor = cnx.cursor()  # init cursor
-
             cursor.execute(sql_queries.CREATE_SCHEMA)
             cursor.execute(sql_queries.USE_DATABASE)
             print("New schema successfully created.")
@@ -29,15 +31,14 @@ class Database:
         except mc.Error as err:
             print(f"Unsuccessful creation of a new schema: {err}")
 
-    @staticmethod
-    def create_tables():
+    def create_tables(self):
 
         for table in sql_queries.TABLES:
             table_query = sql_queries.TABLES[table]
             try:
-                cnx = mc.connect(**kwargs)
-                cursor = cnx.cursor()  # init cursor
-
+                self.connect()
+                cnx = self.cnx
+                cursor = self.cursor
                 cursor.execute(sql_queries.USE_DATABASE)
                 cursor.execute(table_query)
                 print(f"Table {table} successfully created.")
@@ -50,4 +51,5 @@ class Database:
 
 
 db = Database()
+db.create_database()
 db.create_tables()

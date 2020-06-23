@@ -6,6 +6,11 @@ PASSWORD = 'password'
 HOST = 'localhost'
 DATABASE_NAME = 'DataFood'
 
+MYSQLCONFIG = {'user': USER,
+               'password': PASSWORD,
+               'host': HOST,
+               'database': None}
+
 # PRODUCTS : Search criteria for API
 HEADERS = {"User-Agent": "P5_substitute - GNU/Linux - Version 0.1"}
 PAYLOAD = {"search_simple": 1,

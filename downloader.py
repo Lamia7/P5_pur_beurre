@@ -92,8 +92,3 @@ class Downloader:
         print(len(products))  # number of downloaded products
         for one_product in products:
             print(str(one_product))
-
-
-download = Downloader()
-download.avoid_empty()
-download.display_products()

@@ -48,8 +48,3 @@ class Database:
                 cnx.close()
             except mc.Error as err:
                 print(f"Unsuccessful creation of table named {table}, due to error: {err}")
-
-
-db = Database()
-db.create_database()
-db.create_tables()

@@ -8,6 +8,7 @@ class Downloader:
     """Class that downloads the chosen data from OFF api"""
 
     products = []
+    one_product = None
 
     def __init__(self):
         """Gets the thousand most popular products from OFF API"""
@@ -36,6 +37,9 @@ class Downloader:
         products = products_json["products"]
         self.products = products  # list of dictionaries
 
+        self.one_product = None
+        self.final_products = []
+
     def avoid_empty(self):
         """Gets only products without empty values."""
 
@@ -60,9 +64,13 @@ class Downloader:
         clean_products = []
         products = self.products
         for product in products:
-            product['product_name_fr'] = set([name.strip().lower().capitalize() for name in product['product_name_fr'].split(',')])
-            product['categories'] = set([name.strip().lower().capitalize() for name in product['categories'].split(',')])
-            product['stores'] = set([store.strip().upper() for store in product['stores'].split(',')])
+            product['product_name_fr'] = product['product_name_fr'].strip().lower().capitalize()
+            #product['product_name_fr'] = set(product['product_name_fr'])
+            product['categories'] = [name.strip().lower().capitalize() for name in product['categories'].split(',')]
+            product['categories'] = set(product['categories'])
+            product['stores'] = [store.strip().upper() for store in product['stores'].split(',')]
+            product['stores'] = set(product['stores'])
+            product['nutriscore_grade'] = product['nutriscore_grade'].strip().upper()
             clean_products.append(product)
 
         return clean_products
@@ -71,7 +79,7 @@ class Downloader:
         """Gets product objects"""
 
         clean_products = self.clean()
-        products = []
+
         for one_product in clean_products:
             my_product = Product(one_product['product_name_fr'],
                                  one_product['categories'],
@@ -82,13 +90,13 @@ class Downloader:
                                  one_product['nutriscore_grade']
                                  )
 
-            products.append(my_product)
-        return products
+            self.final_products.append(my_product)
+        return self.final_products
 
     def display_products(self):
         """Displays each product's details
         chaine = str(product)"""
-        products = self.get_products()
+        products = self.final_products
         print(len(products))  # number of downloaded products
         for one_product in products:
-            print(str(one_product))
+            return one_product

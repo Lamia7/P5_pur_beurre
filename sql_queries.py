@@ -16,9 +16,9 @@ TABLES = {}
 TABLES['product'] = "CREATE TABLE IF NOT EXISTS `product` (" \
                        "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                        "`name` VARCHAR(150) NOT NULL," \
-                       "`nutriscore` CHAR(1) NOT NULL," \
+                       "`nutriscore_grade` CHAR(1) NOT NULL," \
                        "`barcode` BIGINT UNSIGNED NOT NULL," \
-                       "`brand` VARCHAR(100) NULL," \
+                       "`brands` VARCHAR(100) NULL," \
                        "`url` TEXT NOT NULL," \
                        "PRIMARY KEY (`id`))" \
                        "ENGINE = InnoDB;"
@@ -38,21 +38,20 @@ TABLES['store'] = "CREATE TABLE IF NOT EXISTS `store` (" \
 TABLES['favorite'] = "CREATE TABLE IF NOT EXISTS `favorite` (" \
                         "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT," \
                         "`name` VARCHAR(150) NULL," \
-                        "`nutriscore` CHAR(1) NULL," \
+                        "`nutriscore_grade` CHAR(1) NULL," \
                         "`barcode` BIGINT UNSIGNED NULL," \
                         "`url` TEXT NULL," \
                         "PRIMARY KEY (`id`))" \
                         "ENGINE = InnoDB;"
 
-
 # -------- INSERTION QUERIES -------- #
 
-INSERT_PRODUCTS = "INSERT IGNORE INTO PRODUCT (name, nutriscore, barcode, url) " \
-                  "VALUES (%s, %s, %s, %s);"
+INSERT_PRODUCTS = "INSERT IGNORE INTO 'product' (name, brands, barcode, url, nutriscore_grade) " \
+                  "VALUES (%s, %s, %s, %s, %s);"
 
-INSERT_CATEGORIES = "INSERT IGNORE INTO CATEGORIES (name) VALUES (%s);"
+INSERT_CATEGORIES = "INSERT IGNORE INTO 'categories' (name) VALUES (%s);"
 
-INSERT_STORES = "INSERT IGNORE INTO STORES (name) VALUES (%s);"
+INSERT_STORES = "INSERT IGNORE INTO 'stores' (name) VALUES (%s);"
 """---------------
 INSERT
 INSERT

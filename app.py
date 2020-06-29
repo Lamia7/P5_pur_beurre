@@ -14,9 +14,7 @@ db = Database()
 db.create_database()
 db.create_tables()
 
-#
+# Insert each product to product table in database
 pm = ProductManager()
-
-# Insert each product
 for one_product in downloaded_products:
     pm.insert_product(one_product)

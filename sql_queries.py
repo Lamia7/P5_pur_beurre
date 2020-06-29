@@ -24,7 +24,7 @@ TABLES['product'] = ("CREATE TABLE IF NOT EXISTS `product` ("
 
 TABLES['category'] = ("CREATE TABLE IF NOT EXISTS `category` ("
                       "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
-                      "`name` VARCHAR(100) NOT NULL,"
+                      "`name` VARCHAR(255) NOT NULL,"
                       "PRIMARY KEY (`id`))"
                       "DEFAULT CHARACTER SET = utf8mb4;")
 
@@ -48,7 +48,7 @@ TABLES['favorite'] = ("CREATE TABLE IF NOT EXISTS `favorite` ("
 INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
                    "(name, brands, barcode, url, nutriscore_grade) ""VALUES (%s, %s, %s, %s, %s)")
 
-INSERT_CATEGORIES = "INSERT IGNORE INTO categories (name) VALUES (%s)"
+INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%s)"
 
 INSERT_STORES = "INSERT IGNORE INTO stores (name) VALUES (%s)"
 """---------------

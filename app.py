@@ -1,6 +1,7 @@
 from downloader import Downloader
 from database import Database
 from models.product import ProductManager
+from models.category import CategoryManager
 
 # Get cleaned data
 download = Downloader()
@@ -14,7 +15,14 @@ db = Database()
 db.create_database()
 db.create_tables()
 
-# Insert each product to product table in database
+# Insert each product to database
 pm = ProductManager()
 for one_product in downloaded_products:
     pm.insert_product(one_product)
+print("Products inserted to database.")
+
+# Insert each category to database
+cm = CategoryManager()
+for one_product in downloaded_products:
+    cm.insert_category(one_product)
+print("Categories inserted to database.")

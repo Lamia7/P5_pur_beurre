@@ -65,9 +65,10 @@ class Downloader:
         products = self.products
         for product in products:
             product['product_name_fr'] = product['product_name_fr'].strip().lower().capitalize()
-            #product['product_name_fr'] = set(product['product_name_fr'])
+            # product['product_name_fr'] = set(product['product_name_fr'])
             product['categories'] = [name.strip().lower().capitalize() for name in product['categories'].split(',')]
-            product['categories'] = set(product['categories'])
+            product['categories'] = str(product['categories'])
+            # product['categories'] = set(product['categories']) impossible to insert as set
             product['stores'] = [store.strip().upper() for store in product['stores'].split(',')]
             product['stores'] = set(product['stores'])
             product['nutriscore_grade'] = product['nutriscore_grade'].strip().upper()

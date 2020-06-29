@@ -11,7 +11,7 @@ class Product:
                  category,
                  brands,
                  barcode,
-                 stores,
+                 store,
                  url,
                  nutriscore_grade
                  ):
@@ -20,7 +20,7 @@ class Product:
         self.category = category
         self.brands = brands
         self.barcode = barcode
-        self.stores = stores
+        self.store = store
         self.url = url
         self.nutriscore_grade = nutriscore_grade
 
@@ -29,7 +29,7 @@ class Product:
         return f"----------------\n" \
                f"{self.name} {self.brands} {self.barcode}" \
                f"{self.category}" \
-               f"{self.stores}" \
+               f"{self.store}" \
                f"{self.url}" \
                f"{self.nutriscore_grade}"
 

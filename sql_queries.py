@@ -30,7 +30,7 @@ TABLES['category'] = ("CREATE TABLE IF NOT EXISTS `category` ("
 
 TABLES['store'] = ("CREATE TABLE IF NOT EXISTS `store` ("
                    "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
-                   "`name` VARCHAR(100) NOT NULL,"
+                   "`name` VARCHAR(200) NOT NULL,"
                    "PRIMARY KEY (`id`))"
                    "ENGINE = InnoDB;")
 
@@ -50,7 +50,7 @@ INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
 
 INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%s)"
 
-INSERT_STORES = "INSERT IGNORE INTO stores (name) VALUES (%s)"
+INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%s)"
 """---------------
 INSERT
 INSERT

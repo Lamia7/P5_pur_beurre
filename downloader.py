@@ -70,7 +70,8 @@ class Downloader:
             product['categories'] = str(product['categories'])
             # product['categories'] = set(product['categories']) impossible to insert as set
             product['stores'] = [store.strip().upper() for store in product['stores'].split(',')]
-            product['stores'] = set(product['stores'])
+            #product['stores'] = set(product['stores'])
+            product['stores'] = str(product['stores'])
             product['nutriscore_grade'] = product['nutriscore_grade'].strip().upper()
             clean_products.append(product)
 

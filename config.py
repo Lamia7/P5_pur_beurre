@@ -1,6 +1,6 @@
 """Configuration file for optimization of other files"""
 
-# DATABASE/USER CONFIGURATION
+# ---------- DATABASE/USER CONFIGURATION ---------- #
 USER = 'root'
 PASSWORD = 'lamia'
 HOST = 'localhost'
@@ -11,7 +11,7 @@ MYSQLCONFIG = {'user': USER,
                'host': HOST,
                'database': None}
 
-# PRODUCTS : Search criteria for API
+# ---------- PRODUCTS : Search criteria for API ---------- #
 HEADERS = {"User-Agent": "P5_substitute - GNU/Linux - Version 0.1"}
 PAYLOAD = {"search_simple": 1,
            "action": "process",

@@ -1,3 +1,4 @@
+"""Module that manages Product table"""
 import mysql.connector as mc
 import sql_queries
 import config as conf

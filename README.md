@@ -18,4 +18,11 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [x] Clean data from API
 - [ ] Avoid duplicates
 - [x] Create database with empty tables
-- [ ] Insert data to tables
+- [x] Insert data to tables
+- [ ] Insert data to association tables
+- [ ] Create indexes
+- [ ] Check how to get data by batch/pack to optimize
+- [ ] Create algorithm to find data (categories)
+- [ ] Create algorithm to find data (products from category with nutriscore > C)
+- [ ] Create algorithm to find data (products from similar category list with nutriscore_substitute < nutriscore_product)
+- [ ] Manage inputs

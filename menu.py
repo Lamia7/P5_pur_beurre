@@ -4,7 +4,7 @@
 class Menu:
 
     def __init__(self):
-        pass
+        self.display_menu()
 
     def display_menu(self):
         """ print() et input() between:
@@ -16,7 +16,25 @@ class Menu:
         si input(2) : ... ?
         si input(3) : quit_program()
         """
-        pass
+        a = "OK lançons la méthode :find_display_categories..."
+        b = "OK retrouvons les substituts enregistrés dans la table substitute..."
+
+        print(f"Que souhaitez-vous faire ?")
+
+        rep = input(f"1 - Rechercher un substitut à un aliment. \n"
+                    f"2 - Retrouver mes aliments substitués. \n"
+                    f"3 - Quitter le programme.")
+
+        if rep == "1":
+            print(a)
+        elif rep == "2":
+            print(b)
+        elif rep == "3":
+            self.quit_program()
+        else:
+            print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+                  "...")
+            self.display_menu()
 
     def find_display_categories(self):
         """find randomly 10 categories from category table
@@ -58,4 +76,9 @@ class Menu:
 
     def quit_program(self):
         """ quitter le program quand appelée"""
-        pass
+        print("OK, on arrête tout. C'est l'heure de la sieste.\n"
+              "A bientôt ! \n"
+              "zzZZZzz...")
+
+
+menu = Menu()

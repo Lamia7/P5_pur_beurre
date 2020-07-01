@@ -13,7 +13,7 @@ SHOW_TABLES = "SHOW TABLES;"
 
 TABLES = {}
 TABLES['product'] = ("CREATE TABLE IF NOT EXISTS `product` ("
-                     "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
+                     "`id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,"
                      "`name` VARCHAR(150) NOT NULL,"
                      "`nutriscore_grade` CHAR(1) NOT NULL,"
                      "`barcode` BIGINT UNSIGNED NOT NULL,"
@@ -23,14 +23,14 @@ TABLES['product'] = ("CREATE TABLE IF NOT EXISTS `product` ("
                      "ENGINE = InnoDB;")
 
 TABLES['category'] = ("CREATE TABLE IF NOT EXISTS `category` ("
-                      "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
+                      "`id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,"
                       "`name` VARCHAR(255) NOT NULL,"
                       "PRIMARY KEY (`id`))"
                       "DEFAULT CHARACTER SET = utf8mb4;")
 
 TABLES['store'] = ("CREATE TABLE IF NOT EXISTS `store` ("
-                   "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
-                   "`name` VARCHAR(200) NOT NULL,"
+                   "`id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,"
+                   "`name` VARCHAR(200) NOT NULL UNIQUE,"
                    "PRIMARY KEY (`id`))"
                    "ENGINE = InnoDB;")
 
@@ -42,6 +42,48 @@ TABLES['favorite'] = ("CREATE TABLE IF NOT EXISTS `favorite` ("
                       "`url` TEXT NULL,"
                       "PRIMARY KEY (`id`))"
                       "ENGINE = InnoDB;")
+
+TABLES['product_category'] = ("CREATE TABLE IF NOT EXISTS `product_category` ("
+                              "`category_id` INT UNSIGNED NOT NULL,"
+                              "`product_id` INT UNSIGNED NOT NULL,"
+                              "PRIMARY KEY (`category_id`, `product_id`),"
+                              "FOREIGN KEY (`product_id`)"
+                              "REFERENCES " + DATABASE_NAME + ".`product` (`id`)"
+                                                              "ON DELETE NO ACTION "
+                                                              "ON UPDATE NO ACTION,"
+                                                              "FOREIGN KEY (`category_id`)"
+                                                              "REFERENCES " + DATABASE_NAME + ".`category` (`id`)"
+                                                                                              "ON DELETE NO ACTION "  # empeche suppression du parent et enfant (autre option: CASCADE)
+                                                                                              "ON UPDATE NO ACTION)"
+                                                                                              "ENGINE = InnoDB;")
+
+TABLES['product_store'] = ("CREATE TABLE IF NOT EXISTS `product_store` ("
+                           "`product_id` INT UNSIGNED NOT NULL,"
+                           "`store_id` INT UNSIGNED NOT NULL,"
+                           "PRIMARY KEY (`product_id`, `store_id`),"
+                           "FOREIGN KEY (`product_id`)"
+                           "REFERENCES " + DATABASE_NAME + ".`product` (`id`)"
+                                                           "ON DELETE NO ACTION "
+                                                           "ON UPDATE NO ACTION,"
+                                                           "FOREIGN KEY (`store_id`)"
+                                                           "REFERENCES " + DATABASE_NAME + ".`store` (`id`)"
+                                                                                           "ON DELETE NO ACTION "
+                                                                                           "ON UPDATE NO ACTION)"
+                                                                                           "ENGINE = InnoDB;")
+
+TABLES['product_substitute'] = ("CREATE TABLE IF NOT EXISTS `food_substitute`.`product_favorite` ("
+                                "`product_id` INT UNSIGNED NOT NULL,"
+                                "`favorite_id` INT UNSIGNED NOT NULL,"
+                                "PRIMARY KEY (`product_id`, `favorite_id`),"
+                                "FOREIGN KEY (`product_id`)"
+                                "REFERENCES " + DATABASE_NAME + ".`product` (`id`)"
+                                                                "ON DELETE NO ACTION "
+                                                                "ON UPDATE NO ACTION,"
+                                                                "FOREIGN KEY (`favorite_id`)"
+                                                                "REFERENCES " + DATABASE_NAME + ".`favorite` (`id`)"
+                                                                                                "ON DELETE NO ACTION "
+                                                                                                "ON UPDATE NO ACTION)"
+                                                                                                "ENGINE = InnoDB;")
 
 # -------- INSERTION QUERIES -------- #
 

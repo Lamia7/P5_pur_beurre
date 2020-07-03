@@ -6,12 +6,11 @@ import sql_queries
 
 class Category:
 
-    def __init__(self, id, name):
-        self.id = id
+    def __init__(self, name):
         self.name = name
 
     def __str__(self):
-        return f"{self.id}, {self.name}"
+        return f"{self.name}"
 
 
 class CategoryManager:
@@ -27,12 +26,12 @@ class CategoryManager:
         self.cursor = self.cnx.cursor()  # init cursor
         return self.cursor, self.cnx
 
-    def insert_category(self, one_product):
+    def insert_category(self, category):
         cnx = self.cnx
         cursor = self.cursor
         self.connect()
 
-        data_category = (one_product.category,)
+        data_category = (category.name,)
 
         try:
             cursor.execute(sql_queries.USE_DATABASE)

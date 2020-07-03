@@ -16,20 +16,20 @@ db = Database()
 db.create_database()
 db.create_tables()
 
-# ---------- Insert each product to database ---------- #
+# ---------- Insert each product & category to database ---------- #
 pm = ProductManager()
+cm = CategoryManager()
+# insert product
 for one_product in downloaded_products:
     pm.insert_product(one_product)
+    # insert category
+    for category in one_product.categories:
+        cm.insert_category(category)
 print("Products inserted to database.")
-
-# ---------- Insert each category to database ---------- #
-cm = CategoryManager()
-for one_product in downloaded_products:
-    cm.insert_category(one_product)
 print("Categories inserted to database.")
 
-# ---------- Insert each store to database ---------- #
+"""# ---------- Insert each store to database ---------- #
 sm = StoreManager()
 for one_product in downloaded_products:
     sm.insert_store(one_product)
-print("Stores inserted to database.")
+print("Stores inserted to database.")"""

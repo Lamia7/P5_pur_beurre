@@ -2,37 +2,37 @@
 import mysql.connector as mc
 import sql_queries
 import config as conf
+from models.category import Category
 
 
 class Product:
     """Class that creates products"""
 
-    def __init__(self,
-                 name,
-                 category,
-                 brands,
-                 barcode,
-                 store,
-                 url,
-                 nutriscore_grade
-                 ):
+    def __init__(self, raw_product):
         """description d'un produit: il a un nom, des catégories, marque, magasins, code, ingrédients, url, nutriscore"""
-        self.name = name
-        self.category = category
-        self.brands = brands
-        self.barcode = barcode
-        self.store = store
-        self.url = url
-        self.nutriscore_grade = nutriscore_grade
+        self.name = raw_product['product_name_fr']
+        self.brands = raw_product['brands']
+        self.barcode = raw_product['code']
+        self.url = raw_product['url']
+        self.nutriscore_grade = raw_product['nutriscore_grade']
+        self.categories = []
+        self.set_categories(raw_product['categories'])  # envoie categories du dico product à la méthode
 
     def __str__(self):
         """String representation of Product object"""
         return f"----------------\n" \
                f"{self.name} {self.brands} {self.barcode}" \
-               f"{self.category}" \
-               f"{self.store}" \
+               f"{self.categories}" \
                f"{self.url}" \
                f"{self.nutriscore_grade}"
+
+    def set_categories(self, raw_categories):
+        """Crée une liste d'objets categories
+        - pour chaque cat de la liste categories
+        - instancie un objet category
+        - ajoute chaque objet à la liste
+        pas besoin de le return car self."""
+        self.categories = [Category(raw_category) for raw_category in raw_categories]
 
 
 class ProductManager:

@@ -54,12 +54,12 @@ class ProductManager:
         cursor = self.cursor
         self.connect()
 
-        data_product = (one_product.name,
-                        one_product.brands,
-                        one_product.barcode,
-                        one_product.url,
-                        one_product.nutriscore_grade
-                        )
+        data_product = {'name': one_product.name,
+                        'brands': one_product.brands,
+                        'barcode': one_product.barcode,
+                        'url': one_product.url,
+                        'nutriscore_grade': one_product.nutriscore_grade
+                        }
 
         try:
             cursor.execute(sql_queries.USE_DATABASE)

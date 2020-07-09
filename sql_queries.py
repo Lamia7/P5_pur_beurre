@@ -88,9 +88,9 @@ TABLES['product_substitute'] = ("CREATE TABLE IF NOT EXISTS `food_substitute`.`p
 # -------- INSERTION QUERIES -------- #
 
 INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
-                   "(name, brands, barcode, url, nutriscore_grade) ""VALUES (%s, %s, %s, %s, %s)")
+                   "(name, brands, barcode, url, nutriscore_grade) VALUES (%(name)s, %(brands)s, %(barcode)s, %(url)s, %(nutriscore_grade)s)")
 
-INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%s)"
+INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%(name)s)"
 
 INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%s)"
 """---------------

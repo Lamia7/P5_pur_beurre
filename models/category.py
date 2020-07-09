@@ -31,7 +31,7 @@ class CategoryManager:
         cursor = self.cursor
         self.connect()
 
-        data_category = (category.name,)
+        data_category = {'name': category.name}
 
         try:
             cursor.execute(sql_queries.USE_DATABASE)

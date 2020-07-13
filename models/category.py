@@ -6,11 +6,12 @@ import sql_queries
 
 class Category:
 
-    def __init__(self, name):
+    def __init__(self, name, id=None):
         self.name = name
+        self.id = id
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name}, {self.id}"
 
 
 class CategoryManager:
@@ -34,10 +35,15 @@ class CategoryManager:
         data_category = {'name': category.name}
 
         try:
+            # Insert categories to category table
             cursor.execute(sql_queries.USE_DATABASE)
             cursor.execute(sql_queries.INSERT_CATEGORIES, data_category)
-            # id = cursor.lastrowid
             cnx.commit()
+
+            # Gets the id auto incremented
+            cursor.execute("SELECT LAST_INSERT_ID();")
+            category.id = cursor.fetchone()[0]
+            print(f"ID category: {category.id}")
 
             cursor.close()
             cnx.close()

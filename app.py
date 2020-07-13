@@ -2,6 +2,7 @@ from downloader import Downloader
 from database import Database
 from models.product import ProductManager
 from models.category import CategoryManager
+from models.product_category import ProductCategoryManager, ProductCategory
 from models.store import StoreManager
 
 # Get cleaned data
@@ -27,6 +28,19 @@ for one_product in downloaded_products:
         cm.insert_category(category)
 print("Products inserted to database.")
 print("Categories inserted to database.")
+
+# ---------- Insert product_id and category_id to product_category table ---------- #
+# Creates a list of ProductCategory objects (ids)
+product_category_obj_list = []
+for product in downloaded_products:
+    product_id = product.id  # id de l'objet product de la list
+    for category in product.categories:
+        category_id = category.id
+        product_category_obj_list.append(ProductCategory(product_id, category_id))
+
+pcm = ProductCategoryManager()
+pcm.insert_product_and_category_ids(product_category_obj_list)
+print("Product_Category inserted to database.")
 
 """# ---------- Insert each store to database ---------- #
 sm = StoreManager()

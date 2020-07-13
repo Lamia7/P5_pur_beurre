@@ -16,7 +16,8 @@ class Product:
         self.url = raw_product['url']
         self.nutriscore_grade = raw_product['nutriscore_grade']
         self.categories = []
-        self.set_categories(raw_product['categories'])  # envoie categories du dico product à la méthode
+        self.id = raw_product.get('id')
+        self.set_categories(raw_product['categories'])  # sends categories to product dict into set_categories()
 
     def __str__(self):
         """String representation of Product object"""
@@ -27,11 +28,11 @@ class Product:
                f"{self.nutriscore_grade}"
 
     def set_categories(self, raw_categories):
-        """Crée une liste d'objets categories
-        - pour chaque cat de la liste categories
-        - instancie un objet category
-        - ajoute chaque objet à la liste
-        pas besoin de le return car self."""
+        """Method that creates a list of objects categories
+        - for each category in categories list
+        - instantiate a category object
+        - adds each category object to the list
+        no need to return as it is in self"""
         self.categories = [Category(raw_category) for raw_category in raw_categories]
 
 
@@ -62,10 +63,16 @@ class ProductManager:
                         }
 
         try:
+            # Insert products to product table
             cursor.execute(sql_queries.USE_DATABASE)
             cursor.execute(sql_queries.INSERT_PRODUCTS, data_product)
-            # product_id = cursor.lastrowid
             cnx.commit()
+
+            # Gets the product id auto incremented
+            cursor.execute("SELECT LAST_INSERT_ID();")
+            one_product.id = cursor.fetchone()[0]
+            print(f"ID product: {one_product.id}")
+            #cnx.commit()
 
             cursor.close()
             cnx.close()

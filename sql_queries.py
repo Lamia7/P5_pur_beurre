@@ -46,7 +46,7 @@ TABLES['favorite'] = ("CREATE TABLE IF NOT EXISTS `favorite` ("
 TABLES['product_category'] = ("CREATE TABLE IF NOT EXISTS `product_category` ("
                               "`category_id` INT UNSIGNED NOT NULL,"
                               "`product_id` INT UNSIGNED NOT NULL,"
-                              "PRIMARY KEY (`category_id`, `product_id`),"
+                              # "PRIMARY KEY (`category_id`, `product_id`),"
                               "FOREIGN KEY (`product_id`)"
                               "REFERENCES " + DATABASE_NAME + ".`product` (`id`)"
                                                               "ON DELETE NO ACTION "
@@ -93,6 +93,11 @@ INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
 INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%(name)s)"
 
 INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%s)"
+
+INSERT_PRODUCT_CATEGORY = "INSERT INTO product_category (product_id, category_id) " \
+                          "VALUES (" \
+                          "%(product_id)s, %(category_id)s);"
+
 """---------------
 INSERT
 INSERT

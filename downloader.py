@@ -67,7 +67,7 @@ class Downloader:
             product['categories'] = [name.strip().lower().capitalize() for name in product['categories'].split(',')]  # list
             product['stores'] = [store.strip().upper() for store in product['stores'].split(',')]  # list
             # product['stores'] = set(product['stores'])
-            product['stores'] = str(product['stores'])
+            #product['stores'] = str(product['stores'])
             product['nutriscore_grade'] = product['nutriscore_grade'].strip().upper()
             self.clean_products.append(product)  # list of dictionaries (products) that contain dictionaries (attributes)
 

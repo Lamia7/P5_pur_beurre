@@ -6,12 +6,12 @@ import sql_queries
 
 class Store:
 
-    def __init__(self, id, name):
+    def __init__(self, name, id=None):
         self.id = id
         self.name = name
 
     def __str__(self):
-        return f"{self.id}, {self.name}"
+        return f"{self.name}, {self.id}"
 
 
 class StoreManager:
@@ -27,18 +27,24 @@ class StoreManager:
         self.cursor = self.cnx.cursor()  # init cursor
         return self.cursor, self.cnx
 
-    def insert_store(self, one_product):
+    def insert_store(self, store):
         cnx = self.cnx
         cursor = self.cursor
         self.connect()
 
-        data_store = (one_product.store,)
+        data_store = {'name': store.name}
 
         try:
             cursor.execute(sql_queries.USE_DATABASE)
             cursor.execute(sql_queries.INSERT_STORES, data_store)
             # id = cursor.lastrowid
             cnx.commit()
+
+            # Récupérer id
+            cursor.execute("SELECT LAST_INSERT_ID();")
+
+            store.id = cursor.fetchone()[0]
+            print(f"Store ID: {store.id}")
 
             cursor.close()
             cnx.close()

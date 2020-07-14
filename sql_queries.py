@@ -14,25 +14,25 @@ SHOW_TABLES = "SHOW TABLES;"
 TABLES = {}
 TABLES['product'] = ("CREATE TABLE IF NOT EXISTS `product` ("
                      "`id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,"
-                     "`name` VARCHAR(150) NOT NULL,"
+                     "`name` VARCHAR(150) NOT NULL UNIQUE,"
                      "`nutriscore_grade` CHAR(1) NOT NULL,"
-                     "`barcode` BIGINT UNSIGNED NOT NULL UNIQUE,"
+                     "`barcode` BIGINT UNSIGNED UNIQUE NOT NULL,"
                      "`brands` VARCHAR(100) NULL,"
                      "`url` TEXT NOT NULL,"
-                     "PRIMARY KEY (`id`))"
-                     "ENGINE = InnoDB;")
+                     "PRIMARY KEY (`id`)"
+                     ") ENGINE = InnoDB")
 
 TABLES['category'] = ("CREATE TABLE IF NOT EXISTS `category` ("
                       "`id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,"
-                      "`name` VARCHAR(255) NOT NULL,"
+                      "`name` VARCHAR(100) NOT NULL,"
                       "PRIMARY KEY (`id`))"
                       "DEFAULT CHARACTER SET = utf8mb4;")
 
 TABLES['store'] = ("CREATE TABLE IF NOT EXISTS `store` ("
                    "`id` INT UNSIGNED NOT NULL UNIQUE AUTO_INCREMENT,"
-                   "`name` VARCHAR(200) NOT NULL UNIQUE,"
+                   "`name` VARCHAR(255) NOT NULL UNIQUE,"
                    "PRIMARY KEY (`id`))"
-                   "ENGINE = InnoDB;")
+                   "DEFAULT CHARACTER SET = utf8mb4;")
 
 TABLES['favorite'] = ("CREATE TABLE IF NOT EXISTS `favorite` ("
                       "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
@@ -60,15 +60,13 @@ TABLES['product_category'] = ("CREATE TABLE IF NOT EXISTS `product_category` ("
 TABLES['product_store'] = ("CREATE TABLE IF NOT EXISTS `product_store` ("
                            "`product_id` INT UNSIGNED NOT NULL,"
                            "`store_id` INT UNSIGNED NOT NULL,"
-                           "PRIMARY KEY (`product_id`, `store_id`),"
+                           # "PRIMARY KEY (`product_id`, `store_id`),"
                            "FOREIGN KEY (`product_id`)"
                            "REFERENCES " + DATABASE_NAME + ".`product` (`id`)"
                                                            "ON DELETE NO ACTION "
                                                            "ON UPDATE NO ACTION,"
                                                            "FOREIGN KEY (`store_id`)"
-                                                           "REFERENCES " + DATABASE_NAME + ".`store` (`id`)"
-                                                                                           "ON DELETE NO ACTION "
-                                                                                           "ON UPDATE NO ACTION)"
+                                                           "REFERENCES " + DATABASE_NAME + ".`store` (`id`))"
                                                                                            "ENGINE = InnoDB;")
 
 TABLES['product_substitute'] = ("CREATE TABLE IF NOT EXISTS `food_substitute`.`product_favorite` ("
@@ -92,11 +90,15 @@ INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
 
 INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%(name)s)"
 
-INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%s)"
+INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%(name)s);"
 
 INSERT_PRODUCT_CATEGORY = "INSERT INTO product_category (product_id, category_id) " \
                           "VALUES (" \
                           "%(product_id)s, %(category_id)s);"
+
+INSERT_PRODUCT_STORE = "INSERT INTO product_store (product_id, store_id) " \
+                          "VALUES (" \
+                          "%(product_id)s, %(store_id)s);"
 
 """---------------
 INSERT

@@ -3,6 +3,7 @@ import mysql.connector as mc
 import sql_queries
 import config as conf
 from models.category import Category
+from models.store import Store
 
 
 class Product:
@@ -16,8 +17,10 @@ class Product:
         self.url = raw_product['url']
         self.nutriscore_grade = raw_product['nutriscore_grade']
         self.categories = []
+        self.stores = []
         self.id = raw_product.get('id')
         self.set_categories(raw_product['categories'])  # sends categories to product dict into set_categories()
+        self.set_stores(raw_product['stores'])
 
     def __str__(self):
         """String representation of Product object"""
@@ -34,6 +37,14 @@ class Product:
         - adds each category object to the list
         no need to return as it is in self"""
         self.categories = [Category(raw_category) for raw_category in raw_categories]
+
+    def set_stores(self, raw_stores):
+        """Crée une liste d'objets stores
+        - pour chaque cat de la liste stores
+        - instancie un objet store
+        - ajoute chaque objet à la liste
+        pas besoin de le return car self."""
+        self.stores = [Store(raw_store) for raw_store in raw_stores]
 
 
 class ProductManager:
@@ -72,7 +83,7 @@ class ProductManager:
             cursor.execute("SELECT LAST_INSERT_ID();")
             one_product.id = cursor.fetchone()[0]
             print(f"ID product: {one_product.id}")
-            #cnx.commit()
+            cnx.commit()
 
             cursor.close()
             cnx.close()

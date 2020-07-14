@@ -45,6 +45,7 @@ class StoreManager:
 
             store.id = cursor.fetchone()[0]
             print(f"Store ID: {store.id}")
+            cnx.commit()
 
             cursor.close()
             cnx.close()

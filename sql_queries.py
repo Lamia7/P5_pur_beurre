@@ -90,7 +90,8 @@ INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
 
 INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%(name)s)"
 
-INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%(name)s);"
+INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%(name)s) " \
+                "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
 
 INSERT_PRODUCT_CATEGORY = "INSERT INTO product_category (product_id, category_id) " \
                           "VALUES (" \

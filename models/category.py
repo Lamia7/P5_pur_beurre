@@ -44,6 +44,7 @@ class CategoryManager:
             cursor.execute("SELECT LAST_INSERT_ID();")
             category.id = cursor.fetchone()[0]
             print(f"ID category: {category.id}")
+            cnx.commit()
 
             cursor.close()
             cnx.close()

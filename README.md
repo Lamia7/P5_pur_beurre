@@ -19,7 +19,7 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [ ] Avoid duplicates
 - [x] Create database with empty tables
 - [x] Insert data to tables
-- [ ] Insert data to association tables
+- [x] Insert data to association tables
 - [ ] Create indexes
 - [ ] Check how to get data by batch/pack to optimize
 - [ ] Create algorithm to find data (categories)

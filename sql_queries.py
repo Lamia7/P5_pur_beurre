@@ -86,12 +86,13 @@ TABLES['product_substitute'] = ("CREATE TABLE IF NOT EXISTS `food_substitute`.`p
 # -------- INSERTION QUERIES -------- #
 
 INSERT_PRODUCTS = ("INSERT IGNORE INTO product"
-                   "(name, brands, barcode, url, nutriscore_grade) VALUES (%(name)s, %(brands)s, %(barcode)s, %(url)s, %(nutriscore_grade)s)")
+                   "(name, brands, barcode, url, nutriscore_grade) VALUES (%(name)s, %(brands)s, %(barcode)s, %(url)s, %(nutriscore_grade)s) "
+                   "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);")
 
 INSERT_CATEGORIES = "INSERT IGNORE INTO category (name) VALUES (%(name)s)"
 
 INSERT_STORES = "INSERT IGNORE INTO store (name) VALUES (%(name)s) " \
-                "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
+                "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"  # si doublon de store, garder le même id
 
 INSERT_PRODUCT_CATEGORY = "INSERT INTO product_category (product_id, category_id) " \
                           "VALUES (" \

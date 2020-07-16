@@ -45,7 +45,7 @@ class ProductStoreManager:
             cursor.execute(sql_queries.USE_DATABASE)
             for prod_store_dict in data_product_store_list:
                 cursor.execute(sql_queries.INSERT_PRODUCT_STORE, prod_store_dict)
-            cnx.commit()
+                cnx.commit()
 
             cursor.close()
             cnx.close()

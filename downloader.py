@@ -54,7 +54,7 @@ class Downloader:
 
                 full_products.append(p)
         self.products = full_products
-        #print(len(full_products))
+        # print(len(full_products))
 
     def clean(self):
         """Normalize product's name, categories and stores"""
@@ -63,11 +63,8 @@ class Downloader:
         products = self.products
         for product in products:
             product['product_name_fr'] = product['product_name_fr'].strip().lower().capitalize()  # string
-            # product['product_name_fr'] = set(product['product_name_fr'])
             product['categories'] = [name.strip().lower().capitalize() for name in product['categories'].split(',')]  # list
             product['stores'] = [store.strip().upper() for store in product['stores'].split(',')]  # list
-            # product['stores'] = set(product['stores'])
-            #product['stores'] = str(product['stores'])
             product['nutriscore_grade'] = product['nutriscore_grade'].strip().upper()
             self.clean_products.append(product)  # list of dictionaries (products) that contain dictionaries (attributes)
 
@@ -77,7 +74,6 @@ class Downloader:
         """Gets product objects"""
 
         clean_products = self.clean()
-        # products = []
         for one_product_dict in clean_products:
             my_product = Product(one_product_dict)
 
@@ -85,8 +81,10 @@ class Downloader:
         return self.final_products
 
     def display_products(self):
-        """Displays each product's details
-        chaine = str(product)"""
+        """
+        Displays each product's details
+        chaine = str(product)
+        """
         products = self.final_products
         print(len(products))  # number of downloaded products
         for one_product in products:

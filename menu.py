@@ -30,9 +30,9 @@ class Menu:
 
         b = "OK retrouvons les substituts enregistrés dans la table substitute..."
 
-        print(f"\n ------------------------- \n"
-              f"Que souhaitez-vous faire ?\n "
-              f"------------------------- \n")
+        print(f" ------------------------------------------ \n"
+              f"MENU PRINCIPAL : Que souhaitez-vous faire ?\n "
+              f"------------------------------------------ \n")
 
         rep = input(f"[1] - Rechercher un substitut à un aliment. \n"
                     f"[2] - Retrouver mes aliments substitués. \n"
@@ -81,7 +81,7 @@ class Menu:
         self.display_question_two()
 
     def display_question_two(self):
-        print(f"\n ------------------------- \n"
+        print(f" ------------------------- \n"
               f"Que souhaitez-vous faire ?\n "
               f"------------------------- \n")
 

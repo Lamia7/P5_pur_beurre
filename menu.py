@@ -1,10 +1,21 @@
 """Module that handles the app menu"""
+import mysql.connector as mc
+import config as conf
+import sql_queries
 
 
 class Menu:
 
     def __init__(self):
+        self.cnx = None
+        self.cursor = None
+        self.connect()
         self.display_menu()
+
+    def connect(self):
+        self.cnx = mc.connect(**conf.MYSQLCONFIG)
+        self.cursor = self.cnx.cursor()  # init cursor
+        return self.cursor, self.cnx
 
     def display_menu(self):
         """ print() et input() between:
@@ -16,20 +27,22 @@ class Menu:
         si input(2) : ... ?
         si input(3) : quit_program()
         """
-        a = "OK lançons la méthode :find_display_categories..."
+
         b = "OK retrouvons les substituts enregistrés dans la table substitute..."
 
-        print(f"Que souhaitez-vous faire ?")
+        print(f"\n ------------------------- \n"
+              f"Que souhaitez-vous faire ?\n "
+              f"------------------------- \n")
 
-        rep = input(f"1 - Rechercher un substitut à un aliment. \n"
-                    f"2 - Retrouver mes aliments substitués. \n"
-                    f"3 - Quitter le programme.")
+        rep = input(f"[1] - Rechercher un substitut à un aliment. \n"
+                    f"[2] - Retrouver mes aliments substitués. \n"
+                    f"[Q] - Quitter le programme.\n")
 
         if rep == "1":
-            print(a)
+            self.find_display_categories()
         elif rep == "2":
             print(b)
-        elif rep == "3":
+        elif rep == "Q":  # elif rep == "Q" or "q":
             self.quit_program()
         else:
             print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
@@ -45,7 +58,46 @@ class Menu:
 
         si input(entre 1 et 10) : find_display_products()
         si input("2") quit_program()"""
-        pass
+        cnx = self.cnx
+        cursor = self.cursor
+        self.connect()
+
+        try:
+            cursor.execute(sql_queries.USE_DATABASE)
+            cursor.execute(sql_queries.SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS)
+            result = cursor.fetchall()
+
+            print(f" ------------------------------------------------------------- \n "
+                  f"Veuillez sélectionner une catégorie parmi la liste suivante : \n "
+                  f"------------------------------------------------------------- \n")
+            for category in result:
+                print(f"\n {category}")
+
+            cursor.close()
+            cnx.close()
+        except mc.Error as err:
+            print(f"Unsuccessful selection of categories with unhealthy products: {err}")
+
+        self.display_question_two()
+
+    def display_question_two(self):
+        print(f"\n ------------------------- \n"
+              f"Que souhaitez-vous faire ?\n "
+              f"------------------------- \n")
+
+        rep = input(f"(M] - Retour au menu principal.\n"
+                    f"[Q] - Quitter le programme.\n")
+
+        if rep == "1":
+            pass
+        elif rep == "M":  # elif rep == "M" or "m":
+            self.display_menu()
+        elif rep == "Q":  # elif rep == "Q" or "q":
+            self.quit_program()
+        else:
+            print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+                  "...")
+            self.display_question_two()
 
     def find_display_products_by_category(self):
         """
@@ -76,9 +128,10 @@ class Menu:
 
     def quit_program(self):
         """ quitter le program quand appelée"""
-        print("OK, on arrête tout. C'est l'heure de la sieste.\n"
+        print(f"------------------------------------------------- \n"
+              "OK, on arrête tout. C'est l'heure de la sieste.\n"
               "A bientôt ! \n"
-              "zzZZZzz...")
+              "zzZZZzz....................")
 
 
 menu = Menu()

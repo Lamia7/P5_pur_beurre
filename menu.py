@@ -13,9 +13,36 @@ class Menu:
         self.display_menu()
 
     def connect(self):
+        """Method that connects MySQL server"""
         self.cnx = mc.connect(**conf.MYSQLCONFIG)
         self.cursor = self.cnx.cursor()  # init cursor
         return self.cursor, self.cnx
+
+    def disconnect(self):
+        """Method that disconnects MySQL server"""
+        self.cursor.close()
+        self.cnx.close()
+
+    def execute(self, query):
+
+        """
+        def execute(self, query, flag=False):
+        :param query:
+        :param flag:
+        :return:
+
+        flags = {
+            isSelect: True
+        }
+        if flag:
+            return self.cursor.fetchall()
+
+        et pr appeler self.execute(sql_queries.SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS)
+        """
+
+        self.cursor.execute(sql_queries.USE_DATABASE)
+        self.cursor.execute(query)
+        return self.cursor.fetchall()
 
     def display_menu(self):
         """ Displays main menu and handles inputs """
@@ -48,16 +75,14 @@ class Menu:
         + generates list of categories' ids
         + calls next question
         """
-        cnx = self.cnx
-        cursor = self.cursor
-        self.connect()
 
+        self.connect()
         id_category_list = []
 
         try:
-            cursor.execute(sql_queries.USE_DATABASE)
-            cursor.execute(sql_queries.SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS)
-            result = cursor.fetchall()  # returns tuples list
+            self.cursor.execute(sql_queries.USE_DATABASE)
+            self.cursor.execute(sql_queries.SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS)
+            result = self.cursor.fetchall()  # returns tuples list
 
             print(f" ------------------------------------------------------------- \n "
                   f"Veuillez sélectionner une catégorie parmi la liste suivante : \n "
@@ -69,14 +94,13 @@ class Menu:
             for i, category in result:
                 id_category_list.append(str(i))  # convert id as string to be used later to compare with input
 
-            cursor.close()
-            cnx.close()
+            self.disconnect()
         except mc.Error as err:
             print(f"Unsuccessful selection of categories with unhealthy products: {err}")
 
-        self.display_question_two(id_category_list)
+        self.display_question_two(id_category_list)  #argument?
 
-    def display_question_two(self, id_category_list):
+    def display_question_two(self, id_category_list):  #param?
         """
         Method that ask 2nd question (choose a category from list)
         + listen to answers (which category's id)
@@ -108,16 +132,14 @@ class Menu:
         si input("2") quit_program()
 
         """
-        cnx = self.cnx
-        cursor = self.cursor
-        self.connect()
 
+        self.connect()
         #id_product_list = []
 
         try:
-            cursor.execute(sql_queries.USE_DATABASE)
-            cursor.execute(sql_queries.SELECT_PRODUCTS_FROM_CATEGORY, (input_cat_id,))
-            result = cursor.fetchall()  # returns tuples list
+            self.cursor.execute(sql_queries.USE_DATABASE)
+            self.cursor.execute(sql_queries.SELECT_PRODUCTS_FROM_CATEGORY, (input_cat_id,))
+            result = self.cursor.fetchall()  # returns tuples list
 
             print(f" ------------------------------------------------------------- \n "
                   f"Veuillez sélectionner un produit parmi la liste suivante : \n "
@@ -129,8 +151,7 @@ class Menu:
             #for product[0] in result:
                 #id_product_list.append(str(product[0]))  # convert id as string to be used later to compare with input
 
-            cursor.close()
-            cnx.close()
+            self.disconnect()
         except mc.Error as err:
             print(f"Unsuccessful selection of categories with unhealthy products: {err}")
 

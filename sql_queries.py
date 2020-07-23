@@ -112,6 +112,12 @@ SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS = "SELECT category.id, category.name FRO
                                   "GROUP BY category.id HAVING SUM(product_category.product_id) >= 5 " \
                                   "LIMIT 10;"
 
+SELECT_PRODUCTS_FROM_CATEGORY = "SELECT product.id, product.name, product.brands, product.nutriscore_grade, product.url FROM product " \
+                                "LEFT JOIN product_category ON product.id = product_category.product_id " \
+                                "RIGHT JOIN category ON category.id = product_category.category_id " \
+                                "WHERE category.id = %s " \
+                                "AND (product.nutriscore_grade = 'C' OR product.nutriscore_grade = 'D' OR product.nutriscore_grade = 'E') " \
+                                "GROUP BY product.id"
 
 """---------------
 SELECT_CATEGORY_MIN_10_PRODUCTS = "SELECT category.id, category.name FROM category " \
@@ -141,13 +147,36 @@ LIMIT 10);
 ---------------------------------------------------
 TERMINAL
 
-nom des categories
+nom des categories unhealthy
 SELECT category.id, category.name FROM category 
 LEFT JOIN product_category ON category.id = product_category.category_id 
 RIGHT JOIN product ON product_category.product_id = product.id 
 WHERE nutriscore_grade = 'C' OR nutriscore_grade = 'D' OR nutriscore_grade = 'E' 
 GROUP BY category.id HAVING SUM(product_category.product_id) >= 5 
 LIMIT 10;
+
+produits unhealthy
+SELECT product.id, product.name, product.brands, product.nutriscore_grade, product.url FROM product
+LEFT JOIN product_category ON product.id = product_category.product_id
+RIGHT JOIN category ON category.id = product_category.category_id
+WHERE nutriscore_grade = 'C' OR nutriscore_grade = 'D' OR nutriscore_grade = 'E'
+GROUP BY product.id
+
+produits d'une categorie unhealthy
+SELECT product.id, product.name, product.brands, product.nutriscore_grade, product.url FROM product
+LEFT JOIN product_category ON product.id = product_category.product_id
+RIGHT JOIN category ON category.id = product_category.category_id
+WHERE category.id = %s
+AND (product.nutriscore_grade = 'C' OR product.nutriscore_grade = 'D' OR product.nutriscore_grade = 'E')
+GROUP BY product.id
+
+exemple:
+SELECT product.id, product.name, product.brands, product.nutriscore_grade, product.url FROM product
+LEFT JOIN product_category ON product.id = product_category.product_id
+RIGHT JOIN category ON category.id = product_category.category_id
+WHERE category.id = 10 
+AND (product.nutriscore_grade = 'C' OR product.nutriscore_grade = 'D' OR product.nutriscore_grade = 'E')
+GROUP BY product.id
 
 SELECT_STORE
 SELECT

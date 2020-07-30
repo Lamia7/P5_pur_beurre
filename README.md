@@ -25,4 +25,5 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [x] Create algorithm to find data (products from category with nutriscore > C)
 - [x] Create algorithm to find data (products from similar category list with nutriscore_substitute < nutriscore_product)
 - [x] Manage inputs
+- [x] Add stores details of the chosen substitute
 - [ ] Create indexes

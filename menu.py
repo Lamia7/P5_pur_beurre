@@ -186,6 +186,7 @@ class Menu:
         Method that finds substitutes of selected product
         + displays them
         + generates list of substitutes' ids
+        + displays substitutes' details with stores
         + asks question 3
         """
         self.connect()
@@ -218,6 +219,12 @@ class Menu:
             if rep in id_substitute_list:  # checks if substitute's id in input is valid
                 self.cursor.execute(sql_queries.SELECT_SUBSTITUTE, (rep,))
                 chosen_substitute = self.cursor.fetchone()
+
+                # Finds substitute's store(s)
+                self.cursor.execute(sql_queries.SELECT_STORE, (rep,))
+                stores_substitute_list = self.cursor.fetchall()
+                store_substitute = [''.join(store) for store in stores_substitute_list]
+
                 print(f"______________________________________________________________\n"
                       f"Voici les détails du substitut choisi :\n\n"
                       f"IDENTIFIANT........: {chosen_substitute[0]}\n"
@@ -226,6 +233,7 @@ class Menu:
                       f"CODE BARRE.........: {chosen_substitute[3]}\n"
                       f"NUTRISCORE.........: {chosen_substitute[2]}\n"
                       f"URL Openfoodfacts..: {chosen_substitute[5]}\n"
+                      f"LIEU(X) DE VENTE...: {store_substitute}\n"
                       f"______________________________________________________________\n")
 
             self.disconnect()

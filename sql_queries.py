@@ -136,6 +136,12 @@ SELECT_SUBSTITUTES_BY_PRODUCT = "SELECT P.id AS product_id, P.name AS product_na
 
 SELECT_SUBSTITUTE = "SELECT * FROM product WHERE id = %s"
 
+SELECT_STORE = "SELECT store.name " \
+               "FROM store " \
+               "LEFT JOIN product_store ON store.id = product_store.store_id " \
+               "RIGHT JOIN product ON product_store.product_id = product.id " \
+               "WHERE product.id = %s"
+
 """---------------
 SELECT_CATEGORY_MIN_10_PRODUCTS = "SELECT category.id, category.name FROM category " \
                                   "LEFT JOIN product_category ON category.id = product_category.category_id " \
@@ -150,6 +156,13 @@ SELECT_CATEGORY_MIN_10_UNHEALTHY_PRODUCTS = "SELECT category.id, category.name F
                                   "LIMIT 10;"
 ---------------------------------------------------
 TERMINAL
+
+stores
+SELECT store.name 
+FROM store 
+LEFT JOIN product_store ON store.id = product_store.store_id 
+RIGHT JOIN product ON product_store.product_id = product.id 
+WHERE product.id = %s
 
 nom des categories unhealthy
 SELECT category.id, category.name FROM category 
@@ -175,9 +188,6 @@ AND (product.nutriscore_grade = 'C' OR product.nutriscore_grade = 'D' OR product
 GROUP BY product.id
 
 produits similaires plus healthy
-
-TEST3
-fonctionne
 SELECT P.id AS prod_id, P.name AS prod_name, P.nutriscore_grade AS prod_nutriscore, 
 S.id AS sub_id, S.name AS sub_name, S.nutriscore_grade AS sub_nutriscore   
 FROM product P INNER JOIN product S 
@@ -187,9 +197,10 @@ RIGHT JOIN category
 ON category.id = product_category.category_id 
 WHERE category.id = 7 
 
-en cours
-SELECT P.id AS prod_id, P.name AS prod_name, P.nutriscore_grade AS prod_nutriscore, 
-S.id AS sub_id, S.name AS sub_name, S.nutriscore_grade AS sub_nutriscore   
+substitut
+SELECT P.id AS product_id, P.name AS product_name, P.nutriscore_grade AS product_nutriscore, 
+COUNT(product_category.product_id) AS similar_categories, 
+S.id AS substitute_id, S.name AS substitute_name, S.nutriscore_grade AS substitute_nutriscore 
 FROM product P INNER JOIN product S 
 LEFT JOIN product_category 
 ON P.id = product_category.product_id 
@@ -198,7 +209,9 @@ ON category.id = product_category.category_id
 WHERE P.id = 4 
 AND P.nutriscore_grade > S.nutriscore_grade 
 GROUP BY S.id 
-LIMIT 20;
+HAVING similar_categories >= 2 
+ORDER BY similar_categories DESC 
+LIMIT 10;
 
 (SELECT product_category.product_id 
 FROM product_category 

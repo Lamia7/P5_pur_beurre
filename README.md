@@ -26,4 +26,10 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [x] Create algorithm to find data (products from similar category list with nutriscore_substitute < nutriscore_product)
 - [x] Manage inputs
 - [x] Add stores details of the chosen substitute
+- [x] Create algorithm to save substitute into favorite table
+- [ ] Add option to consult list of favorites
+- [ ] Add option to update database (delete/recreate)
+- [ ] Add option to update favorite table (delete/recreate)
 - [ ] Create indexes
+- [ ] Create a requirements.txt file
+- [ ] Check PEP8 with flake 8

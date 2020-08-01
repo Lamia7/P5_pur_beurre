@@ -2,6 +2,7 @@
 import mysql.connector as mc
 import config as conf
 import sql_queries
+from favorite import Favorite, FavoriteManager
 
 
 class Menu:
@@ -9,6 +10,7 @@ class Menu:
     def __init__(self):
         self.cnx = None
         self.cursor = None
+        self.favorite = None
         self.connect()
         self.display_menu()
 
@@ -86,11 +88,12 @@ class Menu:
             self.cursor.execute(sql_queries.SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS)
             result = self.cursor.fetchall()  # returns tuples list
 
-            print(f" -----------------------------------QUESTION 1------------------------------------ \n "
-                  f"Veuillez sélectionner une catégorie parmi la liste suivante avec l'identifiant: \n "
-                  f"---------------------------------------------------------------------------------- \n")
+            print(f" ------------------------------------------------------------------ \n "
+                  f"                      LISTE DE CATEGORIES: \n "
+                  f"------------------------------------------------------------------- \n")
             for category in result:
-                print(f"IDENTIFIANT: {category[0]} || CATEGORIE: {category[1]}")  # shows each tuple from the tuples list
+                print(
+                    f"IDENTIFIANT: {category[0]} || CATEGORIE: {category[1]}")  # shows each tuple from the tuples list
 
             # List of categories' ids used to verify input
             for i, category in result:
@@ -108,8 +111,12 @@ class Menu:
         + offers other options (quit or back to main menu)
         """
 
-        rep = input(f"\n------------------------OPTIONS------------------------ \n"
-                    f"(M] Retour au menu principal || [Q] Quitter le programme.\n"
+        rep = input(f"\n-------------------------------------ETAPE 1-------------------------------------- \n "
+                    f"Veuillez sélectionner une catégorie parmi la liste ci-dessus avec l'identifiant. \n "
+                    f"---------------------------------------------------------------------------------- \n"
+                    f"----------------------AUTRES OPTIONS---------------------- \n"
+                    f"(M] Retour au menu principal || [Q] Quitter le programme. |\n"
+                    f"-----------------------------------------------------------\n"
                     f">> [Entrez un identifiant] : ")
 
         if rep in id_category_list:  # rep is a str
@@ -121,7 +128,7 @@ class Menu:
         else:
             print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
                   "...")
-            self.display_menu()
+            self.listen_choice_two(id_category_list)
 
     def find_display_products_by_category(self, input_cat_id):
         """
@@ -139,9 +146,9 @@ class Menu:
             self.cursor.execute(sql_queries.SELECT_PRODUCTS_FROM_CATEGORY, (input_cat_id,))
             result = self.cursor.fetchall()  # returns tuples list
 
-            print(f"  -----------------------------------QUESTION 2------------------------------------  \n "
-                  f"Veuillez sélectionner un produit parmi la liste suivante avec l'identifiant: \n "
-                  f"----------------------------------------------------------------------------------- \n")
+            print(f"  -----------------------------------------------------------------------  \n "
+                  f"                           LISTE DE PRODUITS \n "
+                  f"------------------------------------------------------------------------- \n")
             for product in result:
                 print(f"________________________\n"
                       f"IDENTIFIANT: {product[0]}\n"
@@ -166,20 +173,24 @@ class Menu:
         + offers other options (quit or back to main menu)
         """
 
-        rep = input(f"\n------------------------OPTIONS------------------------ \n"
-                    f"(M] Retour au menu principal || [Q] Quitter le programme.\n"
+        rep = input(f"-----------------------AUTRES OPTIONS----------------------- \n"
+                    f"(M] Retour au menu principal || [Q] Quitter le programme.   |\n"
+                    f"------------------------------------------------------------\n"
+                    f"-------------------------------------ETAPE 2---------------------------------------  \n "
+                    f"Choisissez un produit parmi la liste ci-dessus avec l'identifiant. \n "
+                    f"----------------------------------------------------------------------------------- \n"
                     f">> [Entrez un identifiant] : ")
 
         if rep in id_product_list:
             self.find_substitute(rep)
-        if rep.upper() == "M":
+        elif rep.upper() == "M":
             self.display_menu()
         elif rep.upper() == "Q":
             self.quit_program()
         else:
             print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
                   "...")
-            self.display_menu()
+            self.listen_choice_three(id_product_list)
 
     def find_substitute(self, input_product_id):
         """
@@ -192,12 +203,13 @@ class Menu:
         self.connect()
         id_substitute_list = []
 
+        # Displays list of substitutes of the chosen product
         try:
             self.cursor.execute(sql_queries.USE_DATABASE)
             self.cursor.execute(sql_queries.SELECT_SUBSTITUTES_BY_PRODUCT, (input_product_id,))
             result = self.cursor.fetchall()
 
-            print(f" ------------------------------------------QUESTION 3------------------------------------------- \n "
+            print(f" ----------------------------------------------------------------------------------- \n "
                   f"Veuillez sélectionner un substitut parmi la liste suivante pour afficher plus de détails : \n "
                   f"------------------------------------------------------------------------------------------------ \n")
 
@@ -208,62 +220,95 @@ class Menu:
                       f"NOM SUBSTITUT: {substitute[5]}\n"
                       f"NUTRISCORE: {substitute[6]}\n")
 
-            print(f"\n------------------------OPTIONS------------------------ \n"
-                  f"(M] Retour au menu principal || [Q] Quitter le programme.\n"
-                  f">> [Entrez un identifiant] : ")
-
             # Handles chosen substitute
-            rep = input()
+            rep = input(f"-----------------------AUTRES OPTIONS----------------------- \n"
+                        f"(M] Retour au menu principal || [Q] Quitter le programme.   |\n"
+                        f"------------------------------------------------------------\n"
+                        f"-------------------------------------ETAPE 3---------------------------------------  \n "
+                        f"Choisissez un substitut parmi la liste ci-dessus pour afficher plus de détails \n "
+                        f"----------------------------------------------------------------------------------- \n"
+                        f">> [Entrez un identifiant] : ")
+
+            # Adds each substitute's id to a list
             for substitute in result:
-                id_substitute_list.append(str(substitute[4]))  # adds each substitute's id to a list
-            if rep in id_substitute_list:  # checks if substitute's id in input is valid
-                self.cursor.execute(sql_queries.SELECT_SUBSTITUTE, (rep,))
-                chosen_substitute = self.cursor.fetchone()
+                id_substitute_list.append(str(substitute[4]))
 
-                # Finds substitute's store(s)
-                self.cursor.execute(sql_queries.SELECT_STORE, (rep,))
-                stores_substitute_list = self.cursor.fetchall()
-                store_substitute = [''.join(store) for store in stores_substitute_list]
+            # Checks if substitute's id in input is valid
+            if rep in id_substitute_list:
+                self.display_substitute(rep)
+            elif rep.upper() == "M":
+                self.display_menu()
+            elif rep.upper() == "Q":
+                self.quit_program()
+            # If substitute's id in input is invalid
+            else:
+                print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+                      "...")
+                self.find_substitute(input_product_id)
 
-                print(f"______________________________________________________________\n"
-                      f"Voici les détails du substitut choisi :\n\n"
-                      f"IDENTIFIANT........: {chosen_substitute[0]}\n"
-                      f"NOM................: {chosen_substitute[1]}\n"
-                      f"MARQUE.............: {chosen_substitute[4]}\n"
-                      f"CODE BARRE.........: {chosen_substitute[3]}\n"
-                      f"NUTRISCORE.........: {chosen_substitute[2]}\n"
-                      f"URL Openfoodfacts..: {chosen_substitute[5]}\n"
-                      f"LIEU(X) DE VENTE...: {store_substitute}\n"
-                      f"______________________________________________________________\n")
-
-            self.disconnect()
         except mc.Error as err:
             print(f"Unsuccessful selection of substitute: {err}")
 
-        self.display_question_four()
+        # self.display_question_four(favorite)
 
-    def display_question_four(self):
+    def display_substitute(self, rep):
+        try:
+            self.cursor.execute(sql_queries.SELECT_SUBSTITUTE, (rep,))
+            chosen_substitute = self.cursor.fetchone()
+
+            # Finds substitute's store(s)
+            self.cursor.execute(sql_queries.SELECT_STORE, (rep,))
+            stores_substitute_list = self.cursor.fetchall()
+            store_substitute = [''.join(store) for store in stores_substitute_list]
+
+            print(f"______________________________________________________________\n"
+                  f"Voici les détails du substitut choisi :\n\n"
+                  f"IDENTIFIANT........: {chosen_substitute[0]}\n"
+                  f"NOM................: {chosen_substitute[1]}\n"
+                  f"MARQUE.............: {chosen_substitute[4]}\n"
+                  f"CODE BARRE.........: {chosen_substitute[3]}\n"
+                  f"NUTRISCORE.........: {chosen_substitute[2]}\n"
+                  f"URL Openfoodfacts..: {chosen_substitute[5]}\n"
+                  f"LIEU(X) DE VENTE...: {store_substitute}\n"
+                  f"______________________________________________________________\n")
+
+            # Creates a favorite object
+            self.favorite = Favorite(chosen_substitute[1],
+                                     chosen_substitute[2],
+                                     chosen_substitute[3],
+                                     chosen_substitute[4],
+                                     chosen_substitute[5],
+                                     str(store_substitute))
+
+            self.disconnect()
+            #return self.favorite
+
+        except mc.Error as err:
+            print(f"Unsuccessful selection of substitute details with stores: {err}")
+
+        self.display_question_four(self.favorite)
+
+    def display_question_four(self, favorite):
         rep = input(f"\n----------------QUESTION 4-------------------\n"
                     f"Que souhaitez-vous faire ?\n\n"
                     f"[S] - Sauvegarder le substitut.\n"
                     f"(M] - Retour au menu principal.\n"
                     f"[Q] - Quitter le programme.\n"
-                    f"-----------------------------------------------")
+                    f"-----------------------------------------------\n"
+                    f">> [Entrez votre choix] : ")
 
         if rep.upper() == "S":
-            print(f"Sauvegardons ce substitut.")
-            #self.save_substitute()
-        if rep.upper() == "M":
+            fm = FavoriteManager()
+            fm.insert_favorite(favorite)
+            print(f"Votre substitut a été sauvegardé dans vos favoris.")
+        elif rep.upper() == "M":
             self.display_menu()
         elif rep.upper() == "Q":
             self.quit_program()
         else:
             print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
                   "...")
-            self.display_menu()
-
-    def save_substitute(self):
-        pass
+            self.display_question_four(favorite)
 
     def quit_program(self):
         """ quitter le program quand appelée"""

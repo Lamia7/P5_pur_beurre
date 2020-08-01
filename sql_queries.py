@@ -35,11 +35,13 @@ TABLES['store'] = ("CREATE TABLE IF NOT EXISTS `store` ("
                    "UNIQUE (name));")
 
 TABLES['favorite'] = ("CREATE TABLE IF NOT EXISTS `favorite` ("
-                      "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT,"
-                      "`name` VARCHAR(150) NULL,"
-                      "`nutriscore_grade` CHAR(1) NULL,"
-                      "`barcode` BIGINT UNSIGNED NULL,"
-                      "`url` TEXT NULL,"
+                      "`id` INT UNSIGNED AUTO_INCREMENT,"
+                      "`name` VARCHAR(150) NOT NULL,"
+                      "`nutriscore_grade` CHAR(1) NOT NULL,"
+                      "`barcode` BIGINT UNSIGNED NOT NULL,"
+                      "`brands` VARCHAR(100) NOT NULL,"
+                      "`url` VARCHAR(250) NOT NULL,"
+                      "`store` VARCHAR(200) NOT NULL,"
                       "PRIMARY KEY (`id`))"
                       "ENGINE = InnoDB;")
 
@@ -99,6 +101,12 @@ INSERT_PRODUCT_STORE = "INSERT INTO product_store (product_id, store_id) " \
                           "VALUES (" \
                           "%(product_id)s, %(store_id)s);"
 
+INSERT_FAVORITE = "INSERT INTO favorite " \
+                  "(name, nutriscore_grade, barcode, brands, url, store) " \
+                  "VALUES (%(name)s, %(nutriscore_grade)s, %(barcode)s, %(brands)s, %(url)s, %(store)s) " \
+                  "ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id);"
+
+
 # -------- SELECTION QUERIES -------- #
 SELECT_CATEGORY_MIN_10_PRODUCTS = "SELECT category.id, category.name FROM category " \
                                   "LEFT JOIN product_category ON category.id = product_category.category_id " \
@@ -141,6 +149,8 @@ SELECT_STORE = "SELECT store.name " \
                "LEFT JOIN product_store ON store.id = product_store.store_id " \
                "RIGHT JOIN product ON product_store.product_id = product.id " \
                "WHERE product.id = %s"
+
+# -------- DELETE QUERIES -------- #
 
 """---------------
 SELECT_CATEGORY_MIN_10_PRODUCTS = "SELECT category.id, category.name FROM category " \
@@ -218,8 +228,21 @@ FROM product_category
 WHERE product_category.category_id = product_category.category_id)
 AND 
 
-TEST4
+create favorite table
+CREATE TABLE IF NOT EXISTS favorite 
+(id INT UNSIGNED AUTO_INCREMENT,
+name VARCHAR(150) NOT NULL,
+nutriscore_grade CHAR(1) NOT NULL,
+barcode BIGINT UNSIGNED NOT NULL,
+brands VARCHAR(100) NOT NULL,
+url VARCHAR(250) NOT NULL,
+PRIMARY KEY (id))
+ENGINE = InnoDB;
 
+
+INSERT INTO favorite 
+(id, name, nutriscore_grade, barcode, brands, url) 
+VALUES test, B, 56734636, LU, blabla)
 
 SELECT_STORE
 SELECT

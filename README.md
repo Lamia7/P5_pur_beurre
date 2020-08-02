@@ -27,7 +27,7 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [x] Manage inputs
 - [x] Add stores details of the chosen substitute
 - [x] Create algorithm to save substitute into favorite table
-- [ ] Add option to consult list of favorites
+- [x] Add option to consult list of favorites (SQL query+algorithm)
 - [ ] Add option to update database (delete/recreate)
 - [ ] Add option to update favorite table (delete/recreate)
 - [ ] Create indexes

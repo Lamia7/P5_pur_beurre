@@ -64,7 +64,7 @@ class Menu:
         if rep.upper() == "R":  # sets the input in uppercase to listen to lower and upper answer
             self.find_display_categories()
         elif rep.upper() == "C":
-            print(b)
+            self.display_favorite()
         elif rep.upper() == "Q":
             self.quit_program()
         else:
@@ -252,7 +252,11 @@ class Menu:
         # self.display_question_four(favorite)
 
     def display_substitute(self, rep):
+        """Method that displays the chosen substitute"""
+        self.connect()
+
         try:
+            self.cursor.execute(sql_queries.USE_DATABASE)
             self.cursor.execute(sql_queries.SELECT_SUBSTITUTE, (rep,))
             chosen_substitute = self.cursor.fetchone()
 
@@ -281,7 +285,6 @@ class Menu:
                                      str(store_substitute))
 
             self.disconnect()
-            #return self.favorite
 
         except mc.Error as err:
             print(f"Unsuccessful selection of substitute details with stores: {err}")
@@ -309,6 +312,33 @@ class Menu:
             print("OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
                   "...")
             self.display_question_four(favorite)
+
+    def display_favorite(self):
+        """
+        Method that displays all the favorite substitutes from favorite table
+        """
+        self.connect()
+        try:
+            self.cursor.execute(sql_queries.USE_DATABASE)
+            self.cursor.execute(sql_queries.SELECT_FAVORITE)
+            favorite_list = self.cursor.fetchall()
+
+            print(f"  -----------------------------------------------------------------------  \n "
+                  f"                   LISTE DE SUBSTITUTS ENREGISTRES\n "
+                  f"------------------------------------------------------------------------- \n")
+
+            for favorite in favorite_list:
+                print(f"________________________\n"
+                      f"IDENTIFIANT: {favorite[0]}\n"
+                      f"NOM PRODUIT: {favorite[1]}\n"
+                      f"NUTRISCORE: {favorite[2]}\n"
+                      f"CODE BARRE: {favorite[3]}\n"
+                      f"MARQUE: {favorite[4]}"
+                      f"URL: {favorite[5]}\n")
+
+            self.disconnect()
+        except mc.Error as err:
+            print(f"Unsuccessful selection of favorite table: {err}")
 
     def quit_program(self):
         """ quitter le program quand appelée"""

@@ -150,6 +150,8 @@ SELECT_STORE = "SELECT store.name " \
                "RIGHT JOIN product ON product_store.product_id = product.id " \
                "WHERE product.id = %s"
 
+SELECT_FAVORITE = "SELECT * FROM favorite;"
+
 # -------- DELETE QUERIES -------- #
 
 """---------------

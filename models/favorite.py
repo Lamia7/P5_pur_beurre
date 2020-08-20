@@ -1,7 +1,6 @@
 """Module that manages Favorite table"""
 import mysql.connector as mc
-import sql_queries
-import config as conf
+from configuration import config as conf, sql_queries as sql
 
 
 class Favorite:
@@ -61,8 +60,8 @@ class FavoriteManager:
 
         try:
             # Insert substitute to favorite table
-            self.cursor.execute(sql_queries.USE_DATABASE)
-            self.cursor.execute(sql_queries.INSERT_FAVORITE, data_favorite)
+            self.cursor.execute(sql.USE_DATABASE)
+            self.cursor.execute(sql.INSERT_FAVORITE, data_favorite)
             self.cnx.commit()
 
             # Gets the product id auto incremented
@@ -72,4 +71,4 @@ class FavoriteManager:
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Unsuccessful insertion of favorite: {err}")
+            print(f"Erreur lors de l'enregistrement du substitut dans les favoris. Détails de l'erreur: {err}")

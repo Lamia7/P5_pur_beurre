@@ -1,7 +1,6 @@
 """Module that manages Product table"""
 import mysql.connector as mc
-import sql_queries
-import config as conf
+from configuration import config as conf, sql_queries as sql
 from models.category import Category
 from models.store import Store
 
@@ -10,7 +9,6 @@ class Product:
     """Class that creates products"""
 
     def __init__(self, clean_product):
-        """description d'un produit: il a un nom, des catégories, marque, magasins, code, ingrédients, url, nutriscore"""
         self.name = clean_product['product_name_fr']
         self.brands = clean_product['brands']
         self.barcode = clean_product['code']
@@ -59,14 +57,18 @@ class ProductManager:
         self.connect()
 
     def connect(self):
+        """Method that connects MySQL server"""
         self.cnx = mc.connect(**conf.MYSQLCONFIG)
         self.cursor = self.cnx.cursor()  # init cursor
         return self.cursor, self.cnx
 
+    def disconnect(self):
+        """Method that disconnects MySQL server"""
+        self.cursor.close()
+        self.cnx.close()
+
     def insert_product(self, one_product):
 
-        cnx = self.cnx
-        cursor = self.cursor
         self.connect()
 
         # Creates a dict of data for insertion
@@ -79,21 +81,17 @@ class ProductManager:
 
         try:
             # Insert products to product table
-            cursor.execute(sql_queries.USE_DATABASE)
-            cursor.execute(sql_queries.INSERT_PRODUCTS, data_product)
-            cnx.commit()
+            self.cursor.execute(sql.USE_DATABASE)
+            self.cursor.execute(sql.INSERT_PRODUCTS, data_product)
+            self.cnx.commit()
 
             # Gets the product id auto incremented
-            cursor.execute("SELECT LAST_INSERT_ID();")
-            one_product.id = cursor.fetchone()[0]
+            self.cursor.execute("SELECT LAST_INSERT_ID();")
+            one_product.id = self.cursor.fetchone()[0]
             # ou : one_product.id = cursor.lastrowid sans ligne 87,88
-            print(f"ID product: {one_product.id}")
+            #print(f"ID product: {one_product.id}")
             #cnx.commit()
 
-            cursor.close()
-            cnx.close()
+            self.disconnect()
         except mc.Error as err:
-            print(f"Unsuccessful insertion of products: {err}")
-
-    def display_product(self):
-        pass
+            print(f"Erreur lors de l'insertion des produits. Détails de l'erreur: {err}")

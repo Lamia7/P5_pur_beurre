@@ -1,7 +1,6 @@
 """Module that manages Store table"""
 import mysql.connector as mc
-import config as conf
-import sql_queries
+from configuration import config as conf, sql_queries as sql
 
 
 class Store:
@@ -23,35 +22,35 @@ class StoreManager:
         self.connect()
 
     def connect(self):
+        """Method that connects MySQL server"""
         self.cnx = mc.connect(**conf.MYSQLCONFIG)
         self.cursor = self.cnx.cursor()  # init cursor
         return self.cursor, self.cnx
 
+    def disconnect(self):
+        """Method that disconnects MySQL server"""
+        self.cursor.close()
+        self.cnx.close()
+
     def insert_store(self, store):
-        cnx = self.cnx
-        cursor = self.cursor
+
         self.connect()
 
         data_store = {'name': store.name}
 
         try:
-            cursor.execute(sql_queries.USE_DATABASE)
-            cursor.execute(sql_queries.INSERT_STORES, data_store)
+            self.cursor.execute(sql.USE_DATABASE)
+            self.cursor.execute(sql.INSERT_STORES, data_store)
             # id = cursor.lastrowid
-            cnx.commit()
+            self.cnx.commit()
 
             # Récupérer id
-            cursor.execute("SELECT LAST_INSERT_ID();")
+            self.cursor.execute("SELECT LAST_INSERT_ID();")
 
-            store.id = cursor.fetchone()[0]
-            print(f"Store ID: {store.id}")
-            cnx.commit()
+            store.id = self.cursor.fetchone()[0]
+            #print(f"Store ID: {store.id}")
+            self.cnx.commit()
 
-            cursor.close()
-            cnx.close()
+            self.disconnect()
         except mc.Error as err:
-            print(f"Unsuccessful insertion of stores: {err}")
-
-    def display_category(self):
-        pass
-
+            print(f"Erreur lors de l'insertion des lieux de vente. Détails de l'erreur: {err}")

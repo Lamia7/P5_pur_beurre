@@ -1,6 +1,5 @@
 import mysql.connector as mc
-import config as conf
-import sql_queries
+from configuration import config as conf, sql_queries as sql
 
 
 class ProductCategory:
@@ -23,9 +22,15 @@ class ProductCategoryManager:
         self.connect()
 
     def connect(self):
+        """Method that connects MySQL server"""
         self.cnx = mc.connect(**conf.MYSQLCONFIG)
         self.cursor = self.cnx.cursor()  # init cursor
         return self.cursor, self.cnx
+
+    def disconnect(self):
+        """Method that disconnects MySQL server"""
+        self.cursor.close()
+        self.cnx.close()
 
     def insert_product_and_category_ids(self, product_category_obj_list):
         """From a list of objects ProductCategory (product_category_obj_list),
@@ -33,8 +38,6 @@ class ProductCategoryManager:
         and id category to 'category_id'
         """
 
-        cnx = self.cnx
-        cursor = self.cursor
         self.connect()
 
         data_product_category_list = []
@@ -42,15 +45,12 @@ class ProductCategoryManager:
             data_product_category_list.append(
                 {'product_id': product_category_ob.product_id, 'category_id': product_category_ob.category_id})
 
-        print(f"data_product_category_list : {data_product_category_list}")
-
         try:
-            cursor.execute(sql_queries.USE_DATABASE)
+            self.cursor.execute(sql.USE_DATABASE)
             for prod_cat_dict in data_product_category_list:
-                cursor.execute(sql_queries.INSERT_PRODUCT_CATEGORY, prod_cat_dict)
-            cnx.commit()
+                self.cursor.execute(sql.INSERT_PRODUCT_CATEGORY, prod_cat_dict)
+            self.cnx.commit()
 
-            cursor.close()
-            cnx.close()
+            self.disconnect()
         except mc.Error as err:
-            print(f"Unsuccessful insertion of product_id and category_id: {err}")
+            print(f"Erreur lors de l'insertion de product_id et category_id. Détails de l'erreur: {err}")

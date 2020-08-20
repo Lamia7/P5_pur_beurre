@@ -1,6 +1,5 @@
 import mysql.connector as mc
-import config as conf
-import sql_queries
+from configuration import config as conf, sql_queries
 
 
 class Database:
@@ -28,12 +27,13 @@ class Database:
         try:
             self.cursor.execute(sql_queries.CREATE_SCHEMA)
             self.cursor.execute(sql_queries.USE_DATABASE)
-            print("New schema successfully created.")
+            #print(f"New database successfully created.\n"
+                  #f"------------------------------------------------------")
             self.cnx.commit()  # Commit/save changes on db
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Unsuccessful creation of a new schema: {err}")
+            print(f"Erreur lors de la mise à jour de la base de données. Détails de l'erreur: {err}")
 
     def create_tables(self):
 
@@ -43,9 +43,9 @@ class Database:
                 self.connect()
                 self.cursor.execute(sql_queries.USE_DATABASE)
                 self.cursor.execute(table_query)
-                print(f"Table {table} successfully created.")
+                #print(f"Table {table} successfully created.")
                 self.cnx.commit()  # Commit/save changes on db
 
                 self.disconnect()
             except mc.Error as err:
-                print(f"Unsuccessful creation of table named {table}, due to error: {err}")
+                print(f"Erreur lors de la mise à jour de la table '{table}'. Détails de l'erreur: {err}")

@@ -20,7 +20,7 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [x] Create database with empty tables
 - [x] Insert data to tables
 - [x] Insert data to association tables
-- [ ] Check how to get data by batch/pack to optimize
+- [x] Check how to get data by batch/pack to optimize
 - [x] Create algorithm to find data (categories)
 - [x] Create algorithm to find data (products from category with nutriscore > C)
 - [x] Create algorithm to find data (products from similar category list with nutriscore_substitute < nutriscore_product)
@@ -28,8 +28,8 @@ Their idea is to create a program that would interact with the Open Food Facts d
 - [x] Add stores details of the chosen substitute
 - [x] Create algorithm to save substitute into favorite table
 - [x] Add option to consult list of favorites (SQL query+algorithm)
-- [ ] Add option to update database (delete/recreate)
-- [ ] Add option to update favorite table (delete/recreate)
+- [x] Add option to update database (delete/recreate)
+- [x] Add option to update favorite table (delete/recreate)
 - [ ] Create indexes
 - [ ] Create a requirements.txt file
 - [ ] Check PEP8 with flake 8

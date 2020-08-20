@@ -1,6 +1,6 @@
 import requests
 import time
-import config
+from configuration import config
 from models.product import Product
 
 
@@ -31,7 +31,7 @@ class Downloader:
                 continue
 
         # optional
-        print(r.url)
+        #print(r.url)
 
         # Assign the products found in a json format into a variable (dictionary)
         products_json = r.json()
@@ -79,13 +79,3 @@ class Downloader:
 
             self.final_products.append(my_product)
         return self.final_products
-
-    def display_products(self):
-        """
-        Displays each product's details
-        chaine = str(product)
-        """
-        products = self.final_products
-        print(len(products))  # number of downloaded products
-        for one_product in products:
-            return one_product

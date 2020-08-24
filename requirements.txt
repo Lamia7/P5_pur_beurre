@@ -1,0 +1,15 @@
+certifi==2020.4.5.2
+chardet==3.0.4
+colorama==0.4.3
+flake8==3.8.3
+idna==2.9
+importlib-metadata==1.7.0
+mccabe==0.6.1
+mysql-connector-python==8.0.20
+protobuf==3.12.2
+pycodestyle==2.6.0
+pyflakes==2.2.0
+requests==2.23.0
+six==1.15.0
+urllib3==1.25.9
+zipp==3.1.0

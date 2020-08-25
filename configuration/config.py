@@ -19,7 +19,9 @@ PAYLOAD = {"search_simple": 1,
            "tag_contains_0": "contains",
            "tag_0": "france",
            "sort_by": "unique_scans_n",
-           "page_size": 5,
+           "page_size": 500,
            "json": 1,
-           "fields": "brands,url,stores,nutriscore_grade,categories,product_name_fr,code"  # make the request faster
+           "fields": "brands,url,stores,nutriscore_grade,"
+                     "categories,product_name_fr,code"
+           # field make the request faster
            }

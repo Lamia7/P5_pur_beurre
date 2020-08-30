@@ -20,7 +20,7 @@ MySQL 8 using the official documentation  <br/>
 Start MySQL services using the official documentation  <br/>  <br/>
 **Create a user with all privileges:**
 ```sql
-CREATE USER 'root'@'localhost' IDENTIFIED BY 'lamia;
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'lamia';
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost';
 ```
 If you want to change the USER and PASSWORD, you will have to modify the config.py file.

@@ -1,6 +1,8 @@
 """Module that manages Product table"""
 import mysql.connector as mc
-from configuration import config as conf, sql_queries as sql
+
+from configuration import config as conf
+from configuration import sql_queries as sql
 from models.category import Category
 from models.store import Store
 
@@ -9,6 +11,7 @@ class Product:
     """Class that creates products"""
 
     def __init__(self, clean_product):
+        """Product description"""
         self.name = clean_product['product_name_fr']
         self.brands = clean_product['brands']
         self.barcode = clean_product['code']
@@ -17,16 +20,8 @@ class Product:
         self.categories = []
         self.stores = []
         self.id = clean_product.get('id')
-        self.set_categories(clean_product['categories'])  # sends categories to product dict into set_categories()
+        self.set_categories(clean_product['categories'])  # cat to pdct dict
         self.set_stores(clean_product['stores'])
-
-    def __str__(self):
-        """String representation of Product object"""
-        return f"----------------\n" \
-               f"{self.name} {self.brands} {self.barcode}" \
-               f"{self.categories}" \
-               f"{self.url}" \
-               f"{self.nutriscore_grade}"
 
     def set_categories(self, clean_categories):
         """
@@ -36,7 +31,8 @@ class Product:
         - adds each category object to the list
         no need to return as it is in self
         """
-        self.categories = [Category(clean_category) for clean_category in clean_categories]
+        self.categories = [Category(clean_category)
+                           for clean_category in clean_categories]
 
     def set_stores(self, clean_stores):
         """
@@ -59,7 +55,7 @@ class ProductManager:
     def connect(self):
         """Method that connects MySQL server"""
         self.cnx = mc.connect(**conf.MYSQLCONFIG)
-        self.cursor = self.cnx.cursor()  # init cursor
+        self.cursor = self.cnx.cursor()
         return self.cursor, self.cnx
 
     def disconnect(self):
@@ -88,10 +84,8 @@ class ProductManager:
             # Gets the product id auto incremented
             self.cursor.execute("SELECT LAST_INSERT_ID();")
             one_product.id = self.cursor.fetchone()[0]
-            # ou : one_product.id = cursor.lastrowid sans ligne 87,88
-            #print(f"ID product: {one_product.id}")
-            #cnx.commit()
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de l'insertion des produits. Détails de l'erreur: {err}")
+            print(f"Erreur lors de l'insertion des produits. "
+                  f"Détails de l'erreur: {err}")

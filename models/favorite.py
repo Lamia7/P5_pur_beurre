@@ -1,12 +1,21 @@
 """Module that manages Favorite table"""
 import mysql.connector as mc
-from configuration import config as conf, sql_queries as sql
+
+from configuration import config as conf
+from configuration import sql_queries as sql
 
 
 class Favorite:
     """Class that creates favorites"""
 
-    def __init__(self, name, nutriscore_grade, barcode, brands, url, store, id=None):
+    def __init__(self,
+                 name,
+                 nutriscore_grade,
+                 barcode,
+                 brands,
+                 url,
+                 store,
+                 id=None):
         """Favorite's description"""
         self.id = id
         self.name = name
@@ -15,18 +24,6 @@ class Favorite:
         self.brands = brands
         self.url = url
         self.store = store
-
-    def __str__(self):
-        """String representation of Favorte object"""
-        return f"----------------\n" \
-               f"{self.id}" \
-               f"{self.name}" \
-               f"{self.nutriscore_grade}" \
-               f"{self.barcode}" \
-               f"{self.brands}" \
-               f"{self.url}" \
-               f"{self.store}" \
-
 
 
 class FavoriteManager:
@@ -51,6 +48,7 @@ class FavoriteManager:
     def insert_favorite(self, favorite):
         self.connect()
 
+        # Creates a dict of data for insertion
         data_favorite = {'name': favorite.name,
                          'nutriscore_grade': favorite.nutriscore_grade,
                          'barcode': favorite.barcode,
@@ -71,4 +69,5 @@ class FavoriteManager:
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de l'enregistrement du substitut dans les favoris. Détails de l'erreur: {err}")
+            print(f"Erreur lors de l'enregistrement du substitut "
+                  f"dans les favoris. Détails de l'erreur: {err}")

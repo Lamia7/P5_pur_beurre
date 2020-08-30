@@ -1,16 +1,16 @@
+"""Module that manages ProductCategory table"""
 import mysql.connector as mc
-from configuration import config as conf, sql_queries as sql
+
+from configuration import config as conf
+from configuration import sql_queries as sql
 
 
 class ProductCategory:
 
     def __init__(self, product_id, category_id):
+        """ProductCategory description"""
         self.product_id = product_id
         self.category_id = category_id
-
-    def __str__(self):
-        """String representation of ProductCategory object"""
-        return f"product_id: {self.product_id}, category_id: {self.category_id}"
 
 
 class ProductCategoryManager:
@@ -33,8 +33,8 @@ class ProductCategoryManager:
         self.cnx.close()
 
     def insert_product_and_category_ids(self, product_category_obj_list):
-        """From a list of objects ProductCategory (product_category_obj_list),
-        this method creates a list of dict that affects id product to 'product_id'
+        """From a list of objs ProductCategory (product_category_obj_list),
+        method creates a list of dict that affects id product to 'product_id'
         and id category to 'category_id'
         """
 
@@ -43,7 +43,8 @@ class ProductCategoryManager:
         data_product_category_list = []
         for product_category_ob in product_category_obj_list:
             data_product_category_list.append(
-                {'product_id': product_category_ob.product_id, 'category_id': product_category_ob.category_id})
+                {'product_id': product_category_ob.product_id,
+                 'category_id': product_category_ob.category_id})
 
         try:
             self.cursor.execute(sql.USE_DATABASE)
@@ -53,4 +54,5 @@ class ProductCategoryManager:
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de l'insertion de product_id et category_id. Détails de l'erreur: {err}")
+            print(f"Erreur lors de l'insertion de product_id et category_id. "
+                  f"Détails de l'erreur: {err}")

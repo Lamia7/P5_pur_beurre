@@ -1,8 +1,11 @@
-"""Module that handles the app menus"""
+"""Module that handles the app menu,
+manages the interaction of the user with the interface"""
 import mysql.connector as mc
-from configuration import config as conf, sql_queries as sql
+from colorama import Back, Fore, Style
+
+from configuration import config as conf
+from configuration import sql_queries as sql
 from models.favorite import Favorite, FavoriteManager
-from colorama import Fore, Back, Style
 from product_management.main import init_database
 
 
@@ -28,31 +31,35 @@ class Menu:
     def display_menu(self):
         """ Displays main menus and handles inputs """
 
-        print(Back.CYAN, Style.BRIGHT + f" ------------------------------------------ \n"
-                                        f"MENU PRINCIPAL : Que souhaitez-vous faire ?\n "
-                                        f"------------------------------------------ \n")
+        print(Back.CYAN, Style.BRIGHT
+              + "-------------------------------------------\n"
+                "MENU PRINCIPAL : Que souhaitez-vous faire ?\n"
+                "------------------------------------------ \n")
         print(Back.RESET, Style.RESET_ALL)
-        print(f"[R] - Rechercher un substitut à un aliment.\n"
-              f"[C] - Consulter mes substituts enregistrés en favoris.\n"
-              f"[S] - Supprimer les substituts enregistrés en favoris.\n"
-              f"[X] - Supprimer et réinstaller la base de données.\n"
-              f"[Q] - Quitter le programme.\n")
-        rep = input(Fore.GREEN + f">> [Entrez votre choix] : ")
+        print("[R] - Rechercher un substitut à un aliment.\n"
+              "[C] - Consulter mes substituts enregistrés en favoris.\n"
+              "[S] - Supprimer les substituts enregistrés en favoris.\n"
+              "[X] - Supprimer et réinstaller la base de données.\n"
+              "[Q] - Quitter le programme.\n")
+        rep = input(Fore.GREEN + ">> [Entrez votre choix] : ")
         print(Fore.RESET)
 
-        if rep.upper() == "R":  # sets the input in uppercase to listen to lower and upper answer
+        if rep.upper() == "R":
             self.find_display_categories()
         elif rep.upper() == "C":
             self.display_favorite()
+            self.display_menu()
         elif rep.upper() == "S":
             self.delete_favorite()
+            self.display_menu()
         elif rep.upper() == "X":
             self.delete_database()
-            init_database()
+            self.display_menu()
         elif rep.upper() == "Q":
             self.quit_program()
         else:
-            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... "
+                             "Et si on réessayait? \n"
                              "...")
             print(Fore.RESET)
             self.display_menu()
@@ -65,15 +72,17 @@ class Menu:
             self.cursor.execute(sql.USE_DATABASE)
             self.cursor.execute(sql.DELETE_FAVORITE_DATA)
 
-            print(Fore.CYAN + "Les substituts favoris ont été supprimés avec succès.")
+            print(Fore.CYAN
+                  + "Les substituts favoris ont été supprimés avec succès.")
             print(Fore.RESET)
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de la suppression des substituts enregistrés favoris. Détails de l'erreur: {err}")
+            print(f"Erreur lors de la suppression des substituts favoris. "
+                  f"Détails de l'erreur: {err}")
 
     def delete_database(self):
-        """Method that deletes database"""
+        """Method that deletes and re install database"""
 
         self.connect()
         try:
@@ -83,13 +92,14 @@ class Menu:
             print(Fore.RESET)
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de la suppression de la base de données. Détails de l'erreur : {err}")
+            print(f"Erreur lors de la suppression de la base de données. "
+                  f"Détails de l'erreur : {err}")
 
-        #init_database()
+        init_database()
 
     def find_display_categories(self):
         """
-        Method that finds 10 categories from category table with unhealthy products
+        Method that finds 10 categories from cat table with unhealthy products
         + display them
         + generates list of categories' ids
         + asks question 1
@@ -103,38 +113,52 @@ class Menu:
             self.cursor.execute(sql.SELECT_CATEGORY_WITH_UNHEALTHY_PRODUCTS)
             result = self.cursor.fetchall()  # returns tuples list
 
-            print(Fore.MAGENTA + f" ------------------------------------------------------------------ \n "
-                                 f"                      LISTE DE CATEGORIES: \n "
-                                 f"------------------------------------------------------------------- ")
+            print(Fore.MAGENTA
+                  + " ---------------------------------"
+                    "--------------------------------- \n "
+                    "                      LISTE DE CATEGORIES: \n "
+                    " ---------------------------------"
+                    "--------------------------------- ")
             print(Fore.RESET)
+            # shows each tuple from the tuples list
             for category in result:
                 print(
-                    f"IDENTIFIANT: {category[0]} || CATEGORIE: {category[1]}")  # shows each tuple from the tuples list
+                    f"IDENTIFIANT: {category[0]} || CATEGORIE: {category[1]}")
 
             # List of categories' ids used to verify input
             for i, category in result:
-                id_category_list.append(str(i))  # convert id as string to be used later to compare with input
+                id_category_list.append(str(i))
+                # convert in str to be used later to compare with input
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de la sélection des catégories. Détails de l'erreur : {err}")
+            print(f"Erreur lors de la sélection des catégories. "
+                  f"Détails de l'erreur : {err}")
 
         self.listen_choice_two(id_category_list)
 
     def listen_choice_two(self, id_category_list):
         """
-        Method that handles inputs (answers) to 2nd question (which category's id from list)
+        Method that handles inputs (answers) to 2nd question
+        (which category's id from list)
         + offers other options (quit or back to main menus)
         """
-        print(Fore.YELLOW + f"\n----------------------AUTRES OPTIONS---------------------- \n"
-                            f"[M] Retour au menus principal || [Q] Quitter le programme. |\n"
-                            f"-----------------------------------------------------------\n")
+        print(Fore.YELLOW
+              + "\n-----------------------------------"
+                "AUTRES OPTIONS---------------------------------- \n"
+                "[M] Retour au menus principal || [Q] Quitter le programme. \n"
+                "-------------------------------------------"
+                "-----------------------------------------\n")
 
-        print(Fore.CYAN + f"-------------------------------------ETAPE 1-------------------------------------- \n "
-                          f"Veuillez sélectionner une catégorie parmi la liste ci-dessus avec l'identifiant. \n "
-                          f"---------------------------------------------------------------------------------- \n")
+        print(Fore.CYAN
+              + "-------------------------------------"
+                "ETAPE 1-------------------------------------- \n "
+                "Veuillez sélectionner une catégorie parmi "
+                "la liste ci-dessus avec l'identifiant. \n "
+                "-------------------------------------------"
+                "--------------------------------------- \n")
 
-        rep = input(Fore.GREEN + f">> [Entrez un identifiant] : ")
+        rep = input(Fore.GREEN + ">> [Entrez un identifiant] : ")
         print(Fore.RESET)
 
         if rep in id_category_list:  # rep is a str
@@ -144,8 +168,10 @@ class Menu:
         elif rep.upper() == "Q":
             self.quit_program()
         else:
-            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
-                             "...")
+            print(Fore.RED
+                  + "OUPS ! Je n'ai pas compris votre choix... "
+                    "Et si on réessayait? \n"
+                    "...")
             self.listen_choice_two(id_category_list)
 
     def find_display_products_by_category(self, input_cat_id):
@@ -161,12 +187,16 @@ class Menu:
 
         try:
             self.cursor.execute(sql.USE_DATABASE)
-            self.cursor.execute(sql.SELECT_PRODUCTS_FROM_CATEGORY, (input_cat_id,))
+            self.cursor.execute(sql.SELECT_PRODUCTS_FROM_CATEGORY,
+                                (input_cat_id,))
             result = self.cursor.fetchall()  # returns tuples list
 
-            print(Fore.MAGENTA + f"  -----------------------------------------------------------------------  \n "
-                                 f"                           LISTE DE PRODUITS \n "
-                                 f"------------------------------------------------------------------------- ")
+            print(Fore.MAGENTA
+                  + " ---------------------------------"
+                    "--------------------------------- \n "
+                    "                           LISTE DE PRODUITS \n "
+                    " ---------------------------------"
+                    "---------------------------------  ")
             print(Fore.RESET)
             for product in result:
                 print(f"________________________\n"
@@ -174,7 +204,8 @@ class Menu:
                       f"NOM PRODUIT: {product[1]}\n"
                       f"MARQUE: {product[2]}\n"
                       f"NUTRISCORE: {product[3]}\n"
-                      f"URL: {product[4]}\n")  # shows each index of tuple from the tuples list
+                      f"URL: {product[4]}\n")
+                # shows each index of tuple from the tuples list
 
             # Adds 1st index (product_id) from list of products
             for product in result:
@@ -182,23 +213,32 @@ class Menu:
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de la sélection de produits malsains. Détails de l'erreur : {err}")
+            print(f"Erreur lors de la sélection de produits malsains. "
+                  f"Détails de l'erreur : {err}")
 
         self.listen_choice_three(id_product_list)
 
     def listen_choice_three(self, id_product_list):
         """
-        Method that handles inputs (answers) to 3rd question (which product's id from list)
+        Method that handles inputs (answers) to 3rd question
+        (which product's id from list)
         + offers other options (quit or back to main menus)
         """
 
-        print(Fore.YELLOW + f"-----------------------AUTRES OPTIONS----------------------- \n"
-                            f"[M] Retour au menus principal || [Q] Quitter le programme.   |\n"
-                            f"------------------------------------------------------------\n")
-        print(Fore.CYAN + f"-------------------------------------ETAPE 2---------------------------------------  \n "
-                          f"Choisissez un produit parmi la liste ci-dessus avec l'identifiant. \n "
-                          f"----------------------------------------------------------------------------------- \n")
-        rep = input(Fore.GREEN + f">> [Entrez un identifiant] : ")
+        print(Fore.YELLOW
+              + "---------------------------------"
+                "AUTRES OPTIONS--------------------------------- \n"
+                "[M] Retour au menus principal || [Q] Quitter le programme.\n"
+                "-----------------------------------------"
+                "---------------------------------------\n")
+        print(Fore.CYAN
+              + "-------------------------------------"
+                "ETAPE 2---------------------------------------  \n "
+                "Choisissez un produit parmi la liste "
+                "ci-dessus avec l'identifiant. \n "
+                "-------------------------------------------"
+                "---------------------------------------- \n")
+        rep = input(Fore.GREEN + ">> [Entrez un identifiant] : ")
         print(Fore.RESET)
 
         if rep in id_product_list:
@@ -208,7 +248,8 @@ class Menu:
         elif rep.upper() == "Q":
             self.quit_program()
         else:
-            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... "
+                             "Et si on réessayait? \n"
                              "...")
             self.listen_choice_three(id_product_list)
 
@@ -226,12 +267,16 @@ class Menu:
         # Displays list of substitutes of the chosen product
         try:
             self.cursor.execute(sql.USE_DATABASE)
-            self.cursor.execute(sql.SELECT_SUBSTITUTES_BY_PRODUCT, (input_product_id,))
+            self.cursor.execute(sql.SELECT_SUBSTITUTES_BY_PRODUCT,
+                                (input_product_id,))
             result = self.cursor.fetchall()
 
-            print(Fore.MAGENTA + f"  -----------------------------------------------------------------------  \n "
-                                 f"                           LISTE DE SUBSTITUTS \n "
-                                 f"------------------------------------------------------------------------- ")
+            print(Fore.MAGENTA
+                  + " ---------------------------------"
+                    "---------------------------------   \n "
+                    "                           LISTE DE SUBSTITUTS \n "
+                    " ---------------------------------"
+                    "---------------------------------  ")
             print(Fore.RESET)
 
             # Prints each substitute from list
@@ -242,14 +287,22 @@ class Menu:
                       f"NUTRISCORE: {substitute[6]}\n")
 
             # Handles chosen substitute
-            print(Fore.YELLOW + f"-----------------------AUTRES OPTIONS----------------------- \n"
-                                f"[M] Retour au menus principal || [Q] Quitter le programme.   |\n"
-                                f"------------------------------------------------------------\n")
+            print(Fore.YELLOW
+                  + "---------------------------------"
+                    "AUTRES OPTIONS--------------------------------- \n"
+                    "[M] Retour au menus principal || "
+                    "[Q] Quitter le programme.\n"
+                    "-----------------------------------------"
+                    "---------------------------------------\n")
             print(
-                Fore.CYAN + f"-------------------------------------ETAPE 2---------------------------------------  \n "
-                            f"Choisissez un substitut parmi la liste ci-dessus pour afficher plus de détails. \n "
-                            f"----------------------------------------------------------------------------------- \n")
-            rep = input(Fore.GREEN + f">> [Entrez un identifiant] : ")
+                Fore.CYAN
+                + "-------------------------------------"
+                  "ETAPE 2---------------------------------------  \n "
+                  "Choisissez un substitut parmi la liste "
+                  "ci-dessus pour afficher plus de détails. \n "
+                  "-------------------------------------------"
+                  "---------------------------------------- \n")
+            rep = input(Fore.GREEN + ">> [Entrez un identifiant] : ")
             print(Fore.RESET)
 
             # Adds each substitute's id to a list
@@ -265,12 +318,14 @@ class Menu:
                 self.quit_program()
             # If substitute's id in input is invalid
             else:
-                print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+                print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... "
+                                 "Et si on réessayait? \n"
                                  "...")
                 self.find_substitute(input_product_id)
 
         except mc.Error as err:
-            print(f"Erreur lors de la sélection de substituts. Détails de l'erreur : {err}")
+            print(f"Erreur lors de la sélection de substituts. "
+                  f"Détails de l'erreur : {err}")
 
     def display_substitute(self, rep):
         """Method that displays the chosen substitute"""
@@ -283,10 +338,14 @@ class Menu:
 
             # Finds substitute's store(s)
             self.cursor.execute(sql.SELECT_STORE, (rep,))
-            store_substitute = [''.join(store) for store in self.cursor.fetchall()]  # fetchall returns a list of stores_substitute
+            store_substitute = \
+                [''.join(store) for store in self.cursor.fetchall()]
+            # fetchall returns a list of stores_substitute
 
-            print(Fore.MAGENTA + f"______________________________________________________________\n"
-                  f"Voici les détails du substitut choisi :")
+            print(Fore.MAGENTA
+                  + "_______________________________"
+                    "_______________________________\n"
+                    "Voici les détails du substitut choisi :")
             print(Fore.RESET)
             print(f"IDENTIFIANT........: {chosen_substitute[0]}\n"
                   f"NOM................: {chosen_substitute[1]}\n"
@@ -295,7 +354,8 @@ class Menu:
                   f"NUTRISCORE.........: {chosen_substitute[2]}\n"
                   f"URL Openfoodfacts..: {chosen_substitute[5]}\n"
                   f"LIEU(X) DE VENTE...: {store_substitute}\n"
-                  f"______________________________________________________________\n")
+                  f"_______________________________"
+                  "_______________________________\n")
 
             # Creates a favorite object
             self.favorite = Favorite(chosen_substitute[1],
@@ -308,24 +368,26 @@ class Menu:
             self.disconnect()
 
         except mc.Error as err:
-            print(f"Erreur lors de l'affichage des détails du substitut. Détails de l'erreur : {err}")
+            print(f"Erreur lors de l'affichage des détails du substitut. "
+                  f"Détails de l'erreur : {err}")
 
         self.listen_choice_four(self.favorite)
 
     def listen_choice_four(self, favorite):
-        print(Fore.CYAN + f"\n----------------ETAPE 4-------------------\n"
-                          f"Que souhaitez-vous faire ?\n\n"
-                          f"[S] - Sauvegarder le substitut.\n"
-                          f"(M] - Retour au menus principal.\n"
-                          f"[Q] - Quitter le programme.\n"
-                          f"-----------------------------------------------\n")
-        rep = input(Fore.GREEN + f">> [Entrez un identifiant] : ")
+        print(Fore.CYAN + "\n----------------ETAPE 4-------------------\n"
+                          "Que souhaitez-vous faire ?\n\n"
+                          "[S] - Sauvegarder le substitut.\n"
+                          "(M] - Retour au menus principal.\n"
+                          "[Q] - Quitter le programme.\n"
+                          "-----------------------------------------------\n")
+        rep = input(Fore.GREEN + ">> [Entrez un identifiant] : ")
         print(Fore.RESET)
 
         if rep.upper() == "S":
             fm = FavoriteManager()
             fm.insert_favorite(favorite)
-            print(Fore.MAGENTA + f"Votre substitut a été sauvegardé dans vos favoris.")
+            print(Fore.MAGENTA
+                  + "Votre substitut a été sauvegardé dans vos favoris.")
             print(Fore.RESET)
             self.display_menu()
         elif rep.upper() == "M":
@@ -333,7 +395,8 @@ class Menu:
         elif rep.upper() == "Q":
             self.quit_program()
         else:
-            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... Et si on réessayait? \n"
+            print(Fore.RED + "OUPS ! Je n'ai pas compris votre choix... "
+                             "Et si on réessayait? \n"
                              "...")
             print(Fore.RESET)
             self.listen_choice_four(favorite)
@@ -348,9 +411,13 @@ class Menu:
             self.cursor.execute(sql.SELECT_FAVORITE)
             favorite_list = self.cursor.fetchall()
 
-            print(Fore.MAGENTA + f"  -----------------------------------------------------------------------  \n "
-                                 f"                   LISTE DE SUBSTITUTS ENREGISTRES\n "
-                                 f"------------------------------------------------------------------------- \n")
+            print(Fore.MAGENTA
+                  + " ---------------------------------"
+                    "---------------------------------   \n "
+                    "                       "
+                    "LISTE DE SUBSTITUTS ENREGISTRES \n "
+                    " ---------------------------------"
+                    "---------------------------------  ")
             print(Fore.RESET)
 
             for favorite in favorite_list:
@@ -361,15 +428,18 @@ class Menu:
                       f"CODE BARRE.........: {favorite[3]}\n"
                       f"MARQUE.............: {favorite[4]}\n"
                       f"URL................: {favorite[5]}\n"
-                      f"LIEU(X) DE VENTE...: {favorite[6]}")
+                      f"LIEU(X) DE VENTE...: {favorite[6]}\n")
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de la sélection des substituts enregistrés. Détails de l'erreur : {err}")
+            print(f"Erreur lors de la sélection des substituts enregistrés. "
+                  f"Détails de l'erreur : {err}")
 
-    def quit_program(self):
-        """ quitter le program quand appelée"""
-        print(Fore.RED + f"------------------------------------------------- \n"
-                         "OK, on arrête tout. C'est l'heure de la sieste.\n"
-                         "A bientôt ! \n"
-                         "zzZZZzz....................")
+    @staticmethod
+    def quit_program():
+        """ Method to quit the program when called"""
+        print(Fore.RED
+              + "------------------------------------------------- \n"
+                "OK, on arrête tout. C'est l'heure de la sieste.\n"
+                "A bientôt ! \n"
+                "zzZZZzz..........................................")

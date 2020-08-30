@@ -1,16 +1,16 @@
 """Module that manages Category table"""
 import mysql.connector as mc
-from configuration import config as conf, sql_queries
+
+from configuration import config as conf
+from configuration import sql_queries
 
 
 class Category:
 
     def __init__(self, name, id=None):
+        """Category description"""
         self.name = name
         self.id = id
-
-    def __str__(self):
-        return f"{self.name}, {self.id}"
 
 
 class CategoryManager:
@@ -36,6 +36,7 @@ class CategoryManager:
 
         self.connect()
 
+        # Creates a dict of data for insertion
         data_category = {'name': category.name}
 
         try:
@@ -47,9 +48,9 @@ class CategoryManager:
             # Gets the id auto incremented
             self.cursor.execute("SELECT LAST_INSERT_ID();")
             category.id = self.cursor.fetchone()[0]
-            #print(f"ID category: {category.id}")
             self.cnx.commit()
 
             self.disconnect()
         except mc.Error as err:
-            print(f"Erreur lors de l'insertion des catégories. Détails de l'erreur: {err}")
+            print(f"Erreur lors de l'insertion des catégories. "
+                  f"Détails de l'erreur: {err}")

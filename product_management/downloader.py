@@ -1,5 +1,7 @@
-import requests
 import time
+
+import requests
+
 from configuration import config
 from models.product import Product
 
@@ -20,20 +22,19 @@ class Downloader:
             # Pause before new request
             time.sleep(1)
             try:
-                r = requests.get("https://fr.openfoodfacts.org/cgi/search.pl?", params=config.PAYLOAD,
+                r = requests.get("https://fr.openfoodfacts.org/cgi/search.pl?",
+                                 params=config.PAYLOAD,
                                  headers=config.HEADERS)
                 break
-            except:
-                print("Connection refused ... Please wait for 5 seconds...")
+            except ValueError:
+                print("Connexion refusée ... "
+                      "Merci de patienter quelques instants...")
                 print("zzZZzz...")
-                time.sleep(5)
-                print("Ok, I am back, now let's continue.")
+                time.sleep(5)  # 5secounds
+                print("Ok, c'est repartie, continuons.")
                 continue
 
-        # optional
-        #print(r.url)
-
-        # Assign the products found in a json format into a variable (dictionary)
+        # Assign products found in a json format into a variable (dict)
         products_json = r.json()
         products = products_json["products"]
         self.products = products  # list of dictionaries
@@ -54,7 +55,6 @@ class Downloader:
 
                 full_products.append(p)
         self.products = full_products
-        # print(len(full_products))
 
     def clean(self):
         """Normalize product's name, categories and stores"""
@@ -62,11 +62,18 @@ class Downloader:
         # clean_products = []
         products = self.products
         for product in products:
-            product['product_name_fr'] = product['product_name_fr'].strip().lower().capitalize()  # string
-            product['categories'] = [name.strip().lower().capitalize() for name in product['categories'].split(',')]  # list
-            product['stores'] = [store.strip().upper() for store in product['stores'].split(',')]  # list
-            product['nutriscore_grade'] = product['nutriscore_grade'].strip().upper()
-            self.clean_products.append(product)  # list of dictionaries (products) that contain dictionaries (attributes)
+            product['product_name_fr'] = \
+                product['product_name_fr'].strip().lower().capitalize()  # str
+            product['categories'] = \
+                [name.strip().lower().capitalize()
+                 for name in product['categories'].split(',')]  # list
+            product['stores'] = \
+                [store.strip().upper()
+                 for store in product['stores'].split(',')]  # list
+            product['nutriscore_grade'] = \
+                product['nutriscore_grade'].strip().upper()
+            # list of dict (products) that contain dictionaries (attributes)
+            self.clean_products.append(product)
 
         return self.clean_products
 
